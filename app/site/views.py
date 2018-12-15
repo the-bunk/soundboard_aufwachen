@@ -7,31 +7,6 @@ mod_site = Blueprint('site', __name__, template_folder='site_templates', static_
 
 @mod_site.before_app_first_request
 def init_my_blueprint():
-    # board = Board(name="beste")
-    # db.session.add(board)
-    # sound = Sound(name="45€", description="Riesenrad gefahren und schön Puffjes gegessen", soundfile='sounds/45_uebern_schnitt.ogg')
-    # db.session.add(sound)
-    # board.sounds.append(sound)
-
-    # sound = Sound(name="AKK ausländisch 1", description="", soundfile='sounds/akk_ndhs_1.ogg')
-    # db.session.add(sound)
-    # board.sounds.append(sound)
-    # sound = Sound(name="AKK ausländisch 2", description="", soundfile='sounds/akk_ndhs_2.ogg')
-    # db.session.add(sound)
-    # board.sounds.append(sound)
-    # sound = Sound(name="AKK ausländisch 3", description="japan?", soundfile='sounds/akk_ndhs_3.ogg')
-    # db.session.add(sound)
-    # board.sounds.append(sound)
-
-    # sound = Sound(name="Zunichte gerammelt", description="deutsches Reich und Europa", soundfile='sounds/zunichte_gerammelt.ogg')
-    # db.session.add(sound)
-    # board.sounds.append(sound)
-
-    # sound = Sound(name="Toller Nachmittag", description="Gottkanzler Schulz", soundfile='sounds/schulz_toller_nachmittag.ogg')
-    # db.session.add(sound)
-    # board.sounds.append(sound)
-
-    # db.session.commit()
     print("init done")
 
 

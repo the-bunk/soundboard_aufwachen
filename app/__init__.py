@@ -4,7 +4,6 @@ from app.core import db
 
 import app.models as models_sounds
 from .site import mod_site
-# from app.mylogger import logger
 
 
 app = Flask(__name__,  static_folder='static')

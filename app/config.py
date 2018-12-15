@@ -7,15 +7,6 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:///test.db'  # relativer pfad
 SQLALCHEMY_TRACK_MODIFICATIONS = True
 # SQLALCHEMY_ECHO=True
 
-SUBDIR = ""
-# SUBDIR_KOCHBUCH = "/kochbuch"
-# KOCHBUCH_ITEM_PIC_FOLDER = APP_PATH + "/static/images/kochbuch/items/"
-
-
-# SERVER_NAME = 'localhost'
-
-
-
 SECRET_KEY = "e89ashdjsahb"
 SESSION_TYPE = 'filesystem'  # ist das okay?
 
