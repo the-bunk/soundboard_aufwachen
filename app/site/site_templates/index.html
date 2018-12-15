@@ -1,0 +1,19 @@
+{% from 'includes/_formhelpers.html' import render_soundcard, include_soundfile %}
+{% extends 'base.html' %}
+
+{% block main_content %}
+
+<!-- MESSAGES-->
+{% include 'includes/_messages.html' %}
+
+<!-- SOUNDCARDS -->
+<div class="columns is-multiline is-centered has-text-centered is-fullwidth">
+    {% for s in board.sounds %}
+        <div class="column is-2 padding-5">
+            {{ include_soundfile(s) }}
+            {{ render_soundcard(s) }}
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
