@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="{{ lang|default("de") }}" xml:lang="{{ lang|default("de") }}" xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		<link rel="stylesheet" href="{{ url_for('site.static', filename='style/bulma.css') }}">
+		<link rel="stylesheet" href="{{ url_for('site.static', filename='style/custom.css') }}">
+		<link href="{{ url_for('site.static', filename='fontawesome/web-fonts-with-css/css/fontawesome-all.css') }}" rel="stylesheet">
+
+		<script src="{{ url_for('site.static', filename='js/bulma.js')}}"></script>
+		<script src="{{ url_for('site.static', filename='js/custom.js')}}"></script>
+        <title>{{config.TITLE}} Admin</title>
+	</head>
+
+{% block body %}
+{% endblock %}
