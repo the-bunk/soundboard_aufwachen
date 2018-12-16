@@ -1,4 +1,4 @@
-from sqlalchemy import Table, Column, Integer, ForeignKey, String, BigInteger
+from sqlalchemy import Table, Column, Integer, ForeignKey, String, BigInteger, Boolean
 from sqlalchemy.orm import relationship
 
 from app.core import db
@@ -19,6 +19,7 @@ class Sound(Base):
     icon = Column(String(500))
     soundfile = Column(String(500))
     count = Column(BigInteger, default=0)
+    enabled = Column(Boolean, default=False)
     boards = relationship(
         "Board",
         secondary=sounds_boards,

@@ -1,0 +1,17 @@
+.hspace-small {
+	height: .5em;
+	width: 100%;
+}
+
+.hspace {
+	height: 2em;
+	width: 100%;
+}
+
+.spaced{
+	margin: 4px;
+}
+
+.red{
+    color: red;
+}

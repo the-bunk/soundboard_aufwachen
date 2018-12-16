@@ -19,3 +19,6 @@ SECURITY_PASSWORD_HASH = 'pbkdf2_sha512'
 SECURITY_TRACKABLE = True
 SECURITY_PASSWORD_SALT = 'sadjLkSac")2}2X7GrsJFn6:3\'t{82Eb/EhL@^@,)=/w{RAj2)RrW*A)/LWQ*%(j[c79Hx5['
 SECRET_KEY = 'super-secret>yA#Bb{7\'bf`$g_{\M5vQYE2w3dDW'
+
+SOUNDS_DIR = 'app/static/sounds'
+MAX_CONTENT_LENGTH = 1 * 1024 * 1024

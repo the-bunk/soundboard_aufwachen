@@ -1,0 +1,37 @@
+{% from 'site/includes/_formhelpers.html' import render_menu, render_soundspende %}
+{% extends 'site/head.html' %}
+{% block body %}
+
+<body>
+    <!-- MODAL -->
+    <div id="modal" class="modal">
+        <div class="modal-background" onclick="toggleModal(); return false;"></div>
+        <div id="modal_content" class="modal-content">
+        {{ render_soundspende() }}
+        </div>
+        <button class="modal-close is-large" aria-label="close" onclick="toggleModal(); return false;"></button>
+    </div>
+
+    <!-- MENU -->
+    {{ render_menu(board, boards) }}
+
+    <!-- SOUNDCARDS -->
+    <div id="main_content">
+        {% block main_content %} {% endblock %}
+    </div>
+
+    <div class="hspace"></div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="content has-text-centered">
+                <p><strong>{{config.TITLE}}</strong> by <a href="mailto:the_bunk@gmx.de">bunk</a></p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>
+{% endblock %}

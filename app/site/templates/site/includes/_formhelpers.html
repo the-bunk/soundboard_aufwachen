@@ -1,0 +1,76 @@
+<!-- MENU -->
+{% macro render_menu(board, boards) %}
+<div class="tabs">
+    <ul>
+        {% for b in boards %}
+        <li{% if b==board %} class="is-active" {% endif %}><a href='/board/{{b.id}}'>{{b.name}}</a></li>
+            {% endfor %}
+            <li{% if board==None %} class="is-active" {% endif %}><a href="/create_board"><del>neues Board</del></a></li>
+    </ul>
+    <button class="is-pulled-right" onclick="toggleModal(); return false;"><i class="fas fa-exclamation-triangle red"></i>Soundspende<i class="fas fa-exclamation-triangle red"></i></button>
+</div>
+{% endmacro %}
+
+<!-- SOUNDCARD -->
+{% macro render_soundcard(sound) %}
+<div class="column is-3 desktop-only">
+    <div class="card ">
+        <div class="card-image">
+            <figure class="image is-3by1">
+                <img src="{{ url_for('site.static', filename='images/soundcard_default.png')}}" alt="not found">
+            </figure>
+        </div>
+        <div class="card-content">
+            <div class="">
+                <p class="is-size-5">{{sound.name}}<br><span class="is-size-7">{{sound.description}}</span></p>
+            </div>
+        </div>
+        <footer class="card-footer">
+            <a id="sound_{{sound.id}}" onclick="playAudio({{sound.id}})" href="#" class="card-footer-item"><i id="icon_sound_{{sound.id}}" class="fas fa-play"></i></a>
+            <a onclick="stopAudio({{sound.id}})" href="#" class="card-footer-item"><i class="fas fa-stop"></i></a>
+        </footer>
+    </div>
+</div>
+{% endmacro %}
+
+<!-- SOUNDFILE -->
+{% macro include_soundfile(sound) %}
+<audio id="{{sound.id}}">
+    <source src="{{ url_for('static', filename=sound.soundfile)}}" type="audio/ogg">
+    <source src="{{ url_for('static', filename=sound.soundfile_mp3)}}" type="audio/mpeg">
+    error
+</audio> {% endmacro %}
+
+<!-- SOUNDSPENDE -->
+{% macro render_soundspende() %}
+
+<div class="modal-card">
+    <section class="modal-card-body">
+        <div class="field">
+            <label class="label">Name</label>
+            <div class="control">
+                <input id="tb_name" class="input" type="text" placeholder="z.B. nix ist für free">
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Beschreibung</label>
+            <div class="control">
+                <input id="tb_description" class="input" type="test" placeholder="z.B. Österreicher weiss bescheid">
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Sounddatei (<1MB)</label>
+            <div class="file has-name is-boxed">
+                <input type="file" class="inputfile inputfile-2" id="soundfile">
+                <label for="file"></span></label>
+            </div>
+        </div>
+        <br/>
+        <div class="control">
+            <button id="bt_submit" class="button is-primary" onclick="submitSoundspende(); return false;">Submit</button>
+        </div>
+    </section>
+</div>
+{% endmacro %}
