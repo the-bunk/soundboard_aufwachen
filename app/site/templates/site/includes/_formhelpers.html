@@ -26,8 +26,8 @@
             </div>
         </div>
         <footer class="card-footer">
-            <a id="sound_{{sound.id}}" onclick="playAudio({{sound.id}})" href="#" class="card-footer-item"><i id="icon_sound_{{sound.id}}" class="fas fa-play"></i></a>
-            <a onclick="stopAudio({{sound.id}})" href="#" class="card-footer-item"><i class="fas fa-stop"></i></a>
+            <a id="sound_{{sound.id}}" onclick="playAudio({{sound.id}}); return false;" href="#" class="card-footer-item"><i id="icon_sound_{{sound.id}}" class="fas fa-play"></i></a>
+            <a onclick="stopAudio({{sound.id}}); return false;" href="#" class="card-footer-item"><i class="fas fa-stop"></i></a>
         </footer>
     </div>
 </div>
