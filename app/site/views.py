@@ -140,6 +140,7 @@ def create_board():
 
 @mod_site.route('/soundspende/submit', methods=["POST"])
 def soundspende_submit():
+    print("CWD: {}".format(os.getcwd()))
     name = remove_html(request.form['name'])
     description = remove_html(request.form['description'])
     soundfile = request.files['soundfile']
@@ -157,3 +158,15 @@ def soundspende_submit():
 
     flash('Soundfile übertragen, dankeschön.', 'success')
     return "1"
+
+
+@mod_site.route('/clicked/<audio_id>', methods=["GET"])
+def clicked_audio(audio_id):
+    try:
+        sound = Sound.query.filter_by(id=audio_id).first()
+        sound.count += 1
+        db.session.commit()
+    except:
+        # logger.debug("sound clicked count error")
+        pass
+    return "0"
