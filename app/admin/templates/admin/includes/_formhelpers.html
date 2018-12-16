@@ -11,11 +11,12 @@
 {% endmacro %}
 
 <!-- ADMIN MENU -->
-{% macro render_admin_menu(user) %}
+{% macro render_admin_menu() %}
 <div class="tabs">
     <ul>
-        {% if user.has_role('admin') %}<li class="is-active"><a href="/admin/users">Benutzer und Rollen</a></li>{% endif %}
-        {% if user.has_role('admin') %}<li><a href="/admin/boards">Soundboards</a></li>{% endif %}
+        {% if current_user.has_role('admin') %}<li class="is-active"><a href="/admin/users">Benutzer und Rollen</a></li>{% endif %}
+        {% if current_user.has_role('admin') %}<li><a href="/admin/boards">Soundboards</a></li>{% endif %}
+        {% if current_user.has_role('admin') %}<li><a href="/admin/sounds">Sounds</a></li>{% endif %}
     </ul>
 </div>
 {% endmacro %}
