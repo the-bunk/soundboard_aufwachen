@@ -34,10 +34,6 @@ def init_my_blueprint():
 @login_required
 @roles_accepted('admin')
 def admin():
-    for r in current_user.roles:
-        print(r.name)
-    if current_user.has_role('admin'):
-        print("HAHAHAHAHAHAH")
     return render_template('admin/admin.html', user=current_user)
 
 
