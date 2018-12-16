@@ -1,3 +1,4 @@
 flask
 flask_session
 flask_sqlalchemy
+flask_security
