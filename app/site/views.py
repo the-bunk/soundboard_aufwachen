@@ -12,6 +12,7 @@ mod_site = Blueprint('site', __name__, template_folder='templates', static_folde
 @mod_site.before_app_first_request
 def init_my_blueprint():
     if not Board.query.filter_by(name="beste").first():
+    if not Board.query.first():
         # BOARDS
         beste = Board(name="beste")
         db.session.add(beste)
