@@ -5,8 +5,8 @@ from app.core import db, security
 
 import app.models as models_sounds
 from .site import mod_site
-# import app.admin.models_security as models_security
-# from .admin import mod_admin
+# import app.admin.models_security as models_security  # für admin aktivieren
+# from .admin import mod_admin  # für admin aktivieren
 
 
 app = Flask(__name__,  static_folder='static')
@@ -17,9 +17,9 @@ Session(app)
 db.init_app(app)
 db.create_all(app=app)  # app=app weil sonst applicationbound error
 
-# security.init_app(app, models_security.user_datastore)
+# security.init_app(app, models_security.user_datastore)  # für admin aktivieren
 
-# app.register_blueprint(mod_admin, url_prefix='/admin')
+# app.register_blueprint(mod_admin, url_prefix='/admin')  # für admin aktivieren
 app.register_blueprint(mod_site)
 
 app.jinja_env.globals.update(config=app.config)
