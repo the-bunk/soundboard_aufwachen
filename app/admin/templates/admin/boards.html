@@ -1,0 +1,37 @@
+{% from 'admin/includes/_formhelpers.html' import render_soundcard, include_soundfile %}
+{% extends '/admin/base.html' %}
+{% block main_content %}
+
+<!-- MESSAGES-->
+{% include 'admin/includes/_messages.html' %}
+
+<div class="tile is-ancestor">
+    <!-- ADD BOARD -->
+    <div class="tile is-3 is-vertical is-parent">
+    </div>
+    <div class="tile is-6 is-vertical is-parent">
+        <div class="tile is-child section">
+            <p class="title">Board hinzufügen</p>
+            <div class="field">
+                <label class="label">Name</label>
+                <div class="control">
+                    <input id="tb_name" class="input" type="text" placeholder="z.B. nix ist für free">
+                </div>
+            </div>
+            <div id="sounds_to_board" class="field">
+                {% for s in sounds %}
+                <a id="sound_{{ s.id}}" data-id="{{ s.id}}" class="button is-danger spaced" href="#" onclick="toggleSoundToBoard('{{ s.id }}'); return false;">{{ s.name }}</a>
+                {% endfor %}
+            </div>
+            <br/>
+            <a id="bt_submit" class="button is-info is-pulled-right" href="#" onclick="submitBoard(); return false;">
+				Bestätigen
+			</a>
+        </div>
+    </div>
+    <div class="tile is-3 is-vertical ">
+    </div>
+</div>
+
+
+{% endblock %}
