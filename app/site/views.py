@@ -25,6 +25,55 @@ def init_my_blueprint():
         db.session.add(alle)
 
         # SOUNDS
+        los = [
+                ["1_prozent_club", "1", ""],
+                ["45_uebern_schnitt_riesenrad_gegessen", "", ""],
+                ["akk_compilation", "", ""],
+                ["aufwachen_quizshow_blank", "1", ""],
+                ["big_time", "2", ""],
+                ["billig_ist_nicht_die_antwort", "", ""],
+                ["das_ist_gut_fuer_unser_land", "2", ""],
+                ["das_kann_nicht_sein_so", "2", ""],
+                ["deutsche_hymne_aegypten", "2", ""],
+                ["deutsche_hymne_amthor", "2", ""],
+                ["find_ich_nicht_gut", "2", ""],
+                ["for_the_many_not_the_few", "1", ""],
+                ["fuer_deutschland_1", "", ""],
+                ["fuer_deutschland_compilation", "", ""],
+                ["immer_nachdenken", "2", ""],
+                ["jobsegen", "1", ""],
+                ["kein_kuesschen", "2", ""],
+                ["kohleausstieg_nicht_verkraften", "", ""],
+                ["landwirte_gesellschaft", "", ""],
+                ["macron_am_firmament", "2", ""],
+                ["merz_alles_dummes_zeug", "", ""],
+                ["merz_heuschrecke", "", ""],
+                ["nahles_gebet", "2", ""],
+                ["nahles_gut_fuer_deutschland", "", ""],
+                ["neustart_fuer_cdu_deutschland", "", ""],
+                ["nichts_ist_for_free", "2", ""],
+                ["planung_in_planung", "2", ""],
+                ["radarschirm", "2", ""],
+                ["richtig_und_wichtig_1", "", ""],
+                ["sauberer_diesel_1", "2", ""],
+                ["sauberer_diesel_2", "", ""],
+                ["schulz_gebet", "2", ""],
+                ["seehofer_raus", "", ""],
+                ["terrorziege", "", ""],
+                ["traurig", "2", ""],
+                ["wolf1", "", ""]
+                ]
+
+        for s in los:
+            sound = Sound(name=s[0].replace("_"," "), soundfile="sounds/{}.ogg".format(s[0]))
+            db.session.add(sound)
+            alle.sounds.append(sound)
+            if s[1] == "1":
+                jingles.sounds.append(sound)
+            elif s[1] == "2":
+                beste.sounds.append(sound)
+            db.session.commit()
+
         sound = Sound(name="45€", description="Riesenrad gefahren und schön Puffjes gegessen", soundfile='sounds/45_uebern_schnitt.ogg', enabled=True)
         db.session.add(sound)
         beste.sounds.append(sound)
@@ -50,6 +99,8 @@ def init_my_blueprint():
 
         sound = Sound(name="Toller Nachmittag", description="Gottkanzler Schulz", soundfile='sounds/schulz_toller_nachmittag.ogg', enabled=True)
         db.session.add(sound)
+        beste.sounds.append(sound)
+        alle.sounds.append(sound)
 
         sound = Sound(name="Jingle Tyler", description="Was ist der größte gemeinsame Tyler", soundfile='sounds/gemeinsamer_tyler.ogg', enabled=True)
         db.session.add(sound)
@@ -106,7 +157,6 @@ def init_my_blueprint():
         sound = Sound(name="Wolf soll im Wald bleiben", description="", soundfile='sounds/wolf_bleibt_im_wald.ogg', enabled=True)
         db.session.add(sound)
         alle.sounds.append(sound)
-        beste.sounds.append(sound)
         
         sound = Sound(name="You are on your own", description="", soundfile='sounds/you_are_on_your_own.ogg', enabled=True)
         db.session.add(sound)
