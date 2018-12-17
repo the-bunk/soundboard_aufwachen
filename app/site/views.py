@@ -164,7 +164,7 @@ def init_my_blueprint():
 
         db.session.commit()
     
-    print("init done")
+    print("site done")
 
 
 
@@ -190,10 +190,13 @@ def create_board():
 
 @mod_site.route('/soundspende/submit', methods=["POST"])
 def soundspende_submit():
-    print("CWD: {}".format(os.getcwd()))
     name = remove_html(request.form['name'])
     description = remove_html(request.form['description'])
     soundfile = request.files['soundfile']
+
+    if Sound.query.filter_by(name=name).first():
+        flash('Dieser Name existiert bereits.', 'danger')
+        return "1"
 
     # save file
     filename = secure_filename(soundfile.filename)
@@ -207,7 +210,7 @@ def soundspende_submit():
     db.session.commit()
 
     flash('Soundfile übertragen, dankeschön.', 'success')
-    return "1"
+    return "0"
 
 
 @mod_site.route('/clicked/<audio_id>', methods=["GET"])
