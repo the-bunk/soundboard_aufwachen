@@ -5,6 +5,9 @@ function playAudio(audio_id) {
   }
   document.getElementById("icon_sound_" + audio_id).className = "fas fa-pause"
   var x = document.getElementById(audio_id)
+  x.onended = function() {
+    stopAudio(audio_id)
+  }
   x.play()
   clickedSound(audio_id)
 }
@@ -105,7 +108,7 @@ function filter_sounds() {
   document.getElementById("div_search").classList.add("is_loading")
   var str_needle = tb_search.value
   if (str_needle == "") {
-   display_sounds()
+    display_sounds()
   } else {
     hide_sounds()
     var o_edit = document.getElementById("tb_search")
