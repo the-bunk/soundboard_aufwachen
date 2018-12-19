@@ -42,16 +42,41 @@
 </div>
 
 <!-- SOUNDS -->
-<div class="tile is-parent">
-    <article class="tile is-child">
-        <p class="title">Sounds</p>
-        <div class="content">
-            {% for s in sounds %}
-            {{s.name}}<br>
-            {% endfor %}
-        </div>
-    </article>
-</div>
+<div id="scroll2sounds" class="tile is-vertical table">
+	<p class="title">Sounds verwalten</p>
+	<table id="table_sounds" class="table is-fullwidth">
+		<thead>
+			<tr>
+				<th><a id="bt_sname" href=# onclick="sortTable('table_sounds', 0, 'bt_sname', true); return false;">Name</a></th>
+				<th><a id="bt_sdescription" href=# onclick="sortTable('table_sounds', 1, 'bt_sdescription', true); return false;">Beschreibung</a></th>
+				<th>Boards</th>
+				<th><a id="bt_scount" href=# onclick="sortTable('table_sounds', 3, 'bt_scount', true); return false;">Zähler</a></th>
+				<th><a id="bt_senabled" href=# onclick="sortTable('table_sounds', 4, 'bt_senabled', true); return false;">aktiv</a></th>
+				<th>bearbeiten</th>
+				<th>löschen</th>
+			</tr>
+		</thead>
+		<tbody>
 
+			{% if sounds %}
+			{% for s in sounds %}
+			<tr>
+				<td>{{ s.name}}</td>
+				<td>{{ s.description}}</td>
+				<td>
+					{% for b in s.boards -%}
+					{% if loop.index == 1 %}{{b.name}}{% else %}, {{b.name}}{% endif %}
+					{%- endfor %}
+				</td>
+				<td>{{ s.count }}</td>
+				<td><a id="tgS_{{s.id}}" href="#" onclick="toggleSoundEnabled('{{s.id}}'); return false;">{{ s.enabled }}</a></td>
+                <td><a href="# admin/sounds/edit/{{ s.id }}"><del>bearbeiten</del></a></td>
+				<td><a href="#" onclick="deleteSound('{{ s.id }}'); return false;">löschen</a></td>
+			</tr>
+			{% endfor %}
+			{%endif %}
+		</tbody>
+	</table>
+</div>
 
 {% endblock %}

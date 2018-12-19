@@ -1,22 +1,10 @@
-<!-- MENU -->
-{% macro render_menu(board, boards) %}
-<div class="tabs">
-    <ul>
-        {% for b in boards %}
-        <li{% if b==board %} class="is-active" {% endif %}><a href='/board/{{b.id}}'>{{b.name}}</a></li>
-        {% endfor %}
-        <li{% if board==None %} class="is-active" {% endif %}><a href="/create_board"><del>neues Board</del></a></li>
-    </ul>
-</div>
-{% endmacro %}
-
 <!-- ADMIN MENU -->
-{% macro render_admin_menu() %}
+{% macro render_admin_menu(selected) %}
 <div class="tabs">
     <ul>
-        {% if current_user.has_role('admin') %}<li class="is-active"><a href="/admin/users">Benutzer und Rollen</a></li>{% endif %}
-        {% if current_user.has_role('admin') %}<li><a href="/admin/boards">Soundboards</a></li>{% endif %}
-        {% if current_user.has_role('admin') %}<li><a href="/admin/sounds">Sounds</a></li>{% endif %}
+        {% if current_user.has_role('admin') %}<li class="{% if selected == 'users' %}is-active{% endif %}"><a href="/admin">Benutzer und Rollen</a></li>{% endif %}
+        {% if current_user.has_role('admin') %}<li class="{% if selected == 'boards' %}is-active{% endif %}"><a href="/admin/boards">Soundboards</a></li>{% endif %}
+        {% if current_user.has_role('admin') %}<li class="{% if selected == 'sounds' %}is-active{% endif %}"><a href="/admin/sounds">Sounds</a></li>{% endif %}
     </ul>
 </div>
 {% endmacro %}
@@ -34,16 +22,44 @@
         </div>
     </div>
     <footer class="card-footer">
-        <a id="sound_{{sound.id}}" onclick="playAudio({{sound.id}})" href="#" class="card-footer-item"><i id="icon_sound_{{sound.id}}" class="fas fa-play"></i></a>
-        <a onclick="stopAudio({{sound.id}})" href="#" class="card-footer-item"><i class="fas fa-stop"></i></a>
+        <a id="sound_{{sound.id}}" onclick="playAudio({{sound.id}}); return false;" href="#" class="card-footer-item"><i id="icon_sound_{{sound.id}}" class="fas fa-play"></i></a>
+        <a onclick="stopAudio({{sound.id}}); return false;" href="#" class="card-footer-item"><i class="fas fa-stop"></i></a>
     </footer>
 </div>
 {% endmacro %}
 
 {% macro include_soundfile(sound) %}
 <audio id="{{sound.id}}">
+{% if sound.filename and path.exists(sound.filename) and path.getsize(sound.filename) > 0 %}
     <source src="{{ url_for('static', filename=sound.soundfile)}}" type="audio/ogg">
-    <source src="{{ url_for('static', filename=sound.soundfile_mp3)}}" type="audio/mpeg">
-    error
+{% else %}
+    <source src="" type="audio/mpeg">
+{% endif %} 
+error
 </audio> 
+{% endmacro %}
+
+
+{% macro render_create_edit_board(sounds, board) %}
+<div class="tile is-child section">
+    <p class="title">Board hinzufügen</p>
+    <div class="field">
+        <label class="label">Name</label>
+        <div class="control">
+            <input id="tb_name" class="input" type="text" placeholder="z.B. nix ist für free" value="{% if board %}{{board.name}}{% endif %}">
+        </div>
+    </div>
+    <div id="sounds_to_board" class="field">
+        {% for s in sounds %}
+        <a id="sound_{{ s.id}}" data-id="{{ s.id}}" class="button spaced {% if board and s in board.sounds %}is-success{% else %}is-danger{% endif %}" href="#" onclick="toggleSoundToBoard('{{ s.id }}'); return false;">{{ s.name }}</a>
+        {% endfor %}
+    </div>
+    <br/>
+    <a id="bt_submit" class="button is-info is-pulled-right" href="#" onclick="submitBoard({% if board %}{{board.id}}{% else %}-1{% endif %}); return false;">
+        Bestätigen
+    </a>
+</div>
+
+
+
 {% endmacro %}
