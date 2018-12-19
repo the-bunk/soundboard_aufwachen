@@ -1,11 +1,12 @@
 <!-- MENU -->
-{% macro render_menu(board, boards) %}
+{% macro render_menu(board, boards, sounds) %}
 <div class="tabs">
     <ul>
         {% for b in boards %}
         <li{% if b==board %} class="is-active" {% endif %}><a href='/board/{{b.id}}'>{{b.name}}</a></li>
             {% endfor %}
-            <li{% if board==None %} class="is-active" {% endif %}><a href="/create_board"><del>neues Board</del></a></li>
+            <!-- <li{% if board==None and sounds==None %} class="is-active" {% endif %}><a href="/create_board"><del>neues Board</del></a></li> -->
+            <li{% if sounds %} class="is-active" {% endif %}><a href="/search">Suche</a></li>
     </ul>
     <button class="is-pulled-right" onclick="toggleModal(); return false;"><i class="fas fa-exclamation-triangle red"></i>Soundspende<i class="fas fa-exclamation-triangle red"></i></button>
 </div>
@@ -13,7 +14,7 @@
 
 <!-- SOUNDCARD -->
 {% macro render_soundcard(sound) %}
-<div class="column is-2 desktop-only">
+<div id="soundcard_{{sound.id}}" class="column is-2 desktop-only soundcard">
     <div class="card ">
         <div class="card-image">
             <figure class="image is-3by1">
@@ -35,11 +36,11 @@
 
 <!-- SOUNDFILE -->
 {% macro include_soundfile(sound) %}
-<audio id="{{sound.id}}">
-    <source src="{{ url_for('static', filename=sound.soundfile)}}" type="audio/ogg">
-    <source src="{{ url_for('static', filename=sound.soundfile_mp3)}}" type="audio/mpeg">
-    error
-</audio> {% endmacro %}
+    <audio id="{{sound.id}}">
+        <source src="{{ url_for('static', filename=sound.soundfile)}}" type="audio/ogg">
+        error
+    </audio> 
+{% endmacro %}
 
 <!-- SOUNDSPENDE -->
 {% macro render_soundspende() %}

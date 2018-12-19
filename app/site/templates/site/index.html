@@ -12,8 +12,10 @@
 <!-- <div class="section"> -->
 <!-- <div class="columns is-multiline is-centered has-text-centered is-fullwidth"> -->
     {% for s in board.sounds %}
+    {% if s.enabled %}
             {{ include_soundfile(s) }}
             {{ render_soundcard(s) }}
+    {% endif %}
     {% endfor %}
 </div>
 </div>

@@ -7,11 +7,11 @@
 		<meta name="description" content="">
 		<meta name="author" content="">
 
-		<link rel="stylesheet" href="{{ url_for('admin.static', filename='style/bulma.css') }}">
+		<link rel="stylesheet" href="{{ url_for('static', filename='style/bulma.css') }}">
 		<link rel="stylesheet" href="{{ url_for('admin.static', filename='style/custom.css') }}">
-		<link href="{{ url_for('admin.static', filename='fontawesome/web-fonts-with-css/css/fontawesome-all.css') }}" rel="stylesheet">
+		<link href="{{ url_for('static', filename='fontawesome/web-fonts-with-css/css/fontawesome-all.css') }}" rel="stylesheet">
 
-		<script src="{{ url_for('admin.static', filename='js/bulma.js')}}"></script>
+		<script src="{{ url_for('static', filename='js/bulma.js')}}"></script>
 		<script src="{{ url_for('admin.static', filename='js/custom.js')}}"></script>
         <title>{{config.TITLE}} Admin</title>
 	</head>

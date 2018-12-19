@@ -1,12 +1,15 @@
 function playAudio(audio_id) {
   document.getElementById("sound_" + audio_id).onclick = function() {
-    pauseAudio(audio_id);
-      return false;
-  };
-  document.getElementById("icon_sound_" + audio_id).className = "fas fa-pause";
-  var x = document.getElementById(audio_id);
-  x.play();
-  clickedSound(audio_id);
+    pauseAudio(audio_id)
+    return false
+  }
+  document.getElementById("icon_sound_" + audio_id).className = "fas fa-pause"
+  var x = document.getElementById(audio_id)
+  x.onended = function() {
+    stopAudio(audio_id)
+  }
+  x.play()
+  clickedSound(audio_id)
 }
 
 function clickedSound(audio_id) {
@@ -20,7 +23,7 @@ function clickedSound(audio_id) {
 function pauseAudio(audio_id) {
   document.getElementById("sound_" + audio_id).onclick = function() {
     playAudio(audio_id)
-      return false;
+    return false
   }
   document.getElementById("icon_sound_" + audio_id).className = "fas fa-play"
   var x = document.getElementById(audio_id)
@@ -30,7 +33,7 @@ function pauseAudio(audio_id) {
 function stopAudio(audio_id) {
   document.getElementById("sound_" + audio_id).onclick = function() {
     playAudio(audio_id)
-      return false;
+    return false
   }
   document.getElementById("icon_sound_" + audio_id).className = "fas fa-play"
   var x = document.getElementById(audio_id)
@@ -87,3 +90,45 @@ function submitSoundspende() {
   request.send(formData)
 }
 
+function hide_sounds() {
+  nameDivs = document.getElementsByClassName("soundcard")
+  for (var j = 0, divsLen = nameDivs.length; j < divsLen; j++) {
+    nameDivs[j].style.display = "none"
+  }
+}
+
+function display_sounds() {
+  nameDivs = document.getElementsByClassName("soundcard")
+  for (var j = 0, divsLen = nameDivs.length; j < divsLen; j++) {
+    nameDivs[j].style.display = "block"
+  }
+}
+
+function filter_sounds() {
+  document.getElementById("div_search").classList.add("is_loading")
+  var str_needle = tb_search.value
+  if (str_needle == "") {
+    display_sounds()
+  } else {
+    hide_sounds()
+    var o_edit = document.getElementById("tb_search")
+    str_needle = str_needle.toUpperCase()
+    var searchStrings = str_needle.split(/\W/)
+
+    for (var i = 0, len = searchStrings.length; i < len; i++) {
+      var currentSearch = searchStrings[i].toUpperCase()
+      if (currentSearch !== "") {
+        nameDivs = document.getElementsByClassName("soundcard")
+        for (var j = 0, divsLen = nameDivs.length; j < divsLen; j++) {
+          if (
+            nameDivs[j].textContent.toUpperCase().indexOf(currentSearch) !== -1
+          ) {
+            nameDivs[j].style.display = "block"
+          }
+        }
+      }
+    }
+  }
+
+  document.getElementById("div_search").classList.remove("is_loading")
+}

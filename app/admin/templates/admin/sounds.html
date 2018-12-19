@@ -1,0 +1,82 @@
+{% from 'admin/includes/_formhelpers.html' import render_soundcard, include_soundfile %}
+{% extends '/admin/base.html' %}
+{% block main_content %}
+
+<!-- MESSAGES-->
+{% include 'admin/includes/_messages.html' %}
+
+<div class="tile is-ancestor">
+    <!-- ADD SOUND -->
+    <div class="tile is-3 is-vertical is-parent">
+    </div>
+    <div class="tile is-6 is-vertical is-parent">
+        <div class="tile is-child section">
+            <p class="title">Sound hinzufügen</p>
+            <div class="field">
+                <label class="label">Name</label>
+                <div class="control">
+                    <input id="tb_name" class="input" type="text" placeholder="z.B. nix ist für free">
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Beschreibung</label>
+                <div class="control">
+                    <input id="tb_description" class="input" type="test" placeholder="z.B. Österreicher weiss bescheid">
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Sounddatei (<1MB)</label>
+                <div class="file has-name is-boxed">
+                    <input type="file" class="inputfile inputfile-2" id="soundfile">
+                    <label for="file"></span></label>
+                </div>
+            </div>
+            <br/>
+            <a id="bt_submit" class="button is-info is-pulled-right" href="#" onclick="submitSound(); return false;">
+				Bestätigen
+			</a>
+        </div>
+    </div>
+    <div class="tile is-3 is-vertical ">
+    </div>
+</div>
+
+<!-- SOUNDS -->
+<div id="scroll2sounds" class="tile is-vertical table">
+	<p class="title">Sounds verwalten</p>
+	<table id="table_sounds" class="table is-fullwidth">
+		<thead>
+			<tr>
+				<th><a id="bt_sname" href=# onclick="sortTable('table_sounds', 0, 'bt_sname', true); return false;">Name</a></th>
+				<th><a id="bt_sdescription" href=# onclick="sortTable('table_sounds', 1, 'bt_sdescription', true); return false;">Beschreibung</a></th>
+				<th>Boards</th>
+				<th><a id="bt_scount" href=# onclick="sortTable('table_sounds', 3, 'bt_scount', true); return false;">Zähler</a></th>
+				<th><a id="bt_senabled" href=# onclick="sortTable('table_sounds', 4, 'bt_senabled', true); return false;">aktiv</a></th>
+				<th>bearbeiten</th>
+				<th>löschen</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			{% if sounds %}
+			{% for s in sounds %}
+			<tr>
+				<td>{{ s.name}}</td>
+				<td>{{ s.description}}</td>
+				<td>
+					{% for b in s.boards -%}
+					{% if loop.index == 1 %}{{b.name}}{% else %}, {{b.name}}{% endif %}
+					{%- endfor %}
+				</td>
+				<td>{{ s.count }}</td>
+				<td><a id="tgS_{{s.id}}" href="#" onclick="toggleSoundEnabled('{{s.id}}'); return false;">{{ s.enabled }}</a></td>
+                <td><a href="# admin/sounds/edit/{{ s.id }}"><del>bearbeiten</del></a></td>
+				<td><a href="#" onclick="deleteSound('{{ s.id }}'); return false;">löschen</a></td>
+			</tr>
+			{% endfor %}
+			{%endif %}
+		</tbody>
+	</table>
+</div>
+
+{% endblock %}

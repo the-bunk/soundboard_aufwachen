@@ -11,156 +11,110 @@ mod_site = Blueprint('site', __name__, template_folder='templates', static_folde
 
 @mod_site.before_app_first_request
 def init_my_blueprint():
+    def str2filename(mystr):
+        return mystr.lower().replace(" ","_")
+
     if not Board.query.first():
+    # if False:
         # BOARDS
         beste = Board(name="beste")
         db.session.add(beste)
-        tilo = Board(name="Tilo")
-        db.session.add(tilo)
-        stefan = Board(name="Stefan")
-        db.session.add(stefan)
         jingles = Board(name="Jingles")
         db.session.add(jingles)
-        alle = Board(name="alle")
-        db.session.add(alle)
 
         # SOUNDS
         los = [
-                ["1_prozent_club", "1", ""],
-                ["45_uebern_schnitt_riesenrad_gegessen", "", ""],
-                ["akk_compilation", "", ""],
-                ["aufwachen_quizshow_blank", "1", ""],
-                ["big_time", "2", ""],
-                ["billig_ist_nicht_die_antwort", "", ""],
-                ["das_ist_gut_fuer_unser_land", "2", ""],
-                ["das_kann_nicht_sein_so", "2", ""],
-                ["deutsche_hymne_aegypten", "2", ""],
-                ["deutsche_hymne_amthor", "2", ""],
-                ["find_ich_nicht_gut", "2", ""],
-                ["for_the_many_not_the_few", "1", ""],
-                ["fuer_deutschland_1", "", ""],
-                ["fuer_deutschland_compilation", "", ""],
-                ["immer_nachdenken", "2", ""],
+                ["1 prozent club", "1", ""],
+                ["45 uebern schnitt riesenrad gegessen", "", ""],
+                ["akk compilation", "", ""],
+                ["aufwachen quizshow blank", "1", ""],
+                ["big time", "2", ""],
+                ["billig ist nicht die antwort", "", ""],
+                ["das ist gut fuer unser land", "2", ""],
+                ["das kann nicht sein so", "2", ""],
+                ["deutsche hymne aegypten", "2", ""],
+                ["deutsche hymne amthor", "2", ""],
+                ["find ich nicht gut", "2", ""],
+                ["for the many not the few", "1", ""],
+                ["fuer deutschland 1", "", ""],
+                ["fuer deutschland compilation", "", ""],
+                ["immer nachdenken", "2", ""],
                 ["jobsegen", "1", ""],
-                ["kein_kuesschen", "2", ""],
-                ["kohleausstieg_nicht_verkraften", "", ""],
-                ["landwirte_gesellschaft", "", ""],
-                ["macron_am_firmament", "2", ""],
-                ["merz_alles_dummes_zeug", "", ""],
-                ["merz_heuschrecke", "", ""],
-                ["nahles_gebet", "2", ""],
-                ["nahles_gut_fuer_deutschland", "", ""],
-                ["neustart_fuer_cdu_deutschland", "", ""],
-                ["nichts_ist_for_free", "2", ""],
-                ["planung_in_planung", "2", ""],
+                ["kein kuesschen", "2", ""],
+                ["kohleausstieg nicht verkraften", "", ""],
+                ["landwirte gesellschaft", "", ""],
+                ["macron am firmament", "2", ""],
+                ["merz alles dummes zeug", "", ""],
+                ["merz heuschrecke", "", ""],
+                ["nahles gebet", "2", ""],
+                ["nahles gut fuer deutschland", "", ""],
+                ["neustart fuer cdu deutschland", "", ""],
+                ["nichts ist for free", "2", ""],
+                ["planung in planung", "2", ""],
                 ["radarschirm", "2", ""],
-                ["richtig_und_wichtig_1", "", ""],
-                ["sauberer_diesel_1", "2", ""],
-                ["sauberer_diesel_2", "", ""],
-                ["schulz_gebet", "2", ""],
-                ["seehofer_raus", "", ""],
+                ["richtig und wichtig 1", "", ""],
+                ["sauberer diesel 1", "2", ""],
+                ["sauberer diesel 2", "", ""],
+                ["schulz gebet", "2", ""],
+                ["seehofer raus", "", ""],
+                ["nee ich kann nicht meckern", "", ""],
                 ["terrorziege", "", ""],
+                ["springend klingt die Muenze", "", ""],
+                ["wer die Lippen Spitzt", "", "lindner_pfeift.ogg"],
+                ["Die Verantwortung der Autohersteller", "", "verantwortung_der_autohersteller.ogg"],
+                ["radikal krass cool", "", ""],
+                ["Geburtstagswünsche von Seehofer", "", "seehofer_geburtstag.ogg"],
+                ["der Verlierer ist die SPD", "", ""],
+                ["wenn wir 15% haben dann stimmt was nicht", "", "nahles_15_prozent.ogg"],
+                ["Junge du hast nichts kapiert", "", "steinmeier_nichts_kapiert.ogg"],
+                ["Hört zu!", "", "steinmeier_hoert_zu.ogg"],
+                ["gute Botschaft fuer unser Land", "", ""],
+                ["I said: King we're protecting you!", "2", "trump_protecting_the_king.ogg"],
+                ["Greta 1", "", "greta_1.ogg"],
+                ["Greta 2", "", "greta_2.ogg"],
+                ["ja", "", ""],
+                ["Wirtschaftsmotor", "", "wirtschaftsmotor_ziehen.ogg"],
+                ["die Furche weiterziehen", "", "schulz_furche.ogg"],
+                ["Deutschland oder unser Land", "", "merkel_unser_land.ogg"],
+                ["Geburtstagswünsche von Merkel", "", "merkel_geburtstag.ogg"],
+                ["Feuer!", "", "feuer.ogg"],
+                ["Waffenexportpolitik", "", ""],
+                ["Danke Angela Merkel", "", ""],
                 ["traurig", "2", ""],
+                ["Arbeit Geißel der Menschheit", "", "arbeit_geissel_der_menschheit.ogg"],
+                ["45€", "2", '45_uebern_schnitt.ogg'],
+                ["AKK ndhs 1", "", 'akk_ndhs_1.ogg'],
+                ["AKK ndhs 2", "", 'akk_ndhs_2.ogg'],
+                ["AKK ndhs 3", "", 'akk_ndhs_3.ogg'],
+                ["Zunichte gerammelt", "2", 'zunichte_gerammelt.ogg'],
+                ["Toller Nachmittag", "2", 'schulz_toller_nachmittag.ogg'],
+                ["Jingle Tyler", "1", 'gemeinsamer_tyler.ogg'],
+                ["Jingle Hans-Jessen-Show", "1", 'hans_jessen_show.ogg'],
+                ["Joint rauchen", "", 'fdp_alte_joint_geraucht.ogg'],
+                ["Demokrat Hoeneß", "2", 'grosser_demokrat.ogg'],
+                ["Herzlichen Dank und Deutschland alles Gute", "", 'herzlichen_dank_deutschland_alles_gute.ogg'],
+                ["Herzlichen Dank", "", 'herzlichen_dank.ogg'],
+                ["Entschuldigung", "2", 'nahles_entschuldigung.ogg'],
+                ["Klasse!", "2", 'schulz_klasse.ogg'],
+                ["Tschüss zusammen", "", 'schulz_tschuess_zusammen.ogg'],
+                ["Tagesschau und Tagesthemen informieren Sie", "", 'tagesschau_und_tagesthemen.ogg'],
+                ["Wir kümmern uns", "2", 'wir_kuemmern_uns.ogg'],
+                ["Wolf soll im Wald bleiben", "", 'wolf_bleibt_im_wald.ogg'],
+                ["You are on your own", "", 'you_are_on_your_own.ogg'],
                 ["wolf1", "", ""]
                 ]
 
         for s in los:
-            sound = Sound(name=s[0].replace("_"," "), soundfile="sounds/{}.ogg".format(s[0]))
+            if s[2] == "":
+                s[2] = "{}.ogg".format(str2filename(s[0]))
+            sound = Sound(name=s[0], soundfile="sounds/{}".format(s[2]), enabled=True)
             db.session.add(sound)
-            alle.sounds.append(sound)
             if s[1] == "1":
                 jingles.sounds.append(sound)
             elif s[1] == "2":
                 beste.sounds.append(sound)
             db.session.commit()
 
-        sound = Sound(name="45€", description="Riesenrad gefahren und schön Puffjes gegessen", soundfile='sounds/45_uebern_schnitt.ogg', enabled=True)
-        db.session.add(sound)
-        beste.sounds.append(sound)
-        alle.sounds.append(sound)
-
-        sound = Sound(name="AKK ndhs 1", description="", soundfile='sounds/akk_ndhs_1.ogg', enabled=True)
-        db.session.add(sound)
-        alle.sounds.append(sound)
-        
-        sound = Sound(name="AKK ndhs 2", description="", soundfile='sounds/akk_ndhs_2.ogg', enabled=True)
-        db.session.add(sound)
-        alle.sounds.append(sound)
-        
-        sound = Sound(name="AKK ndhs 3", description="japan?", soundfile='sounds/akk_ndhs_3.ogg', enabled=True)
-        db.session.add(sound)
-        beste.sounds.append(sound)
-        alle.sounds.append(sound)
-        
-        sound = Sound(name="Zunichte gerammelt", description="deutsches Reich und Europa", soundfile='sounds/zunichte_gerammelt.ogg', enabled=True)
-        db.session.add(sound)
-        beste.sounds.append(sound)
-        alle.sounds.append(sound)
-
-        sound = Sound(name="Toller Nachmittag", description="Gottkanzler Schulz", soundfile='sounds/schulz_toller_nachmittag.ogg', enabled=True)
-        db.session.add(sound)
-        beste.sounds.append(sound)
-        alle.sounds.append(sound)
-
-        sound = Sound(name="Jingle Tyler", description="Was ist der größte gemeinsame Tyler", soundfile='sounds/gemeinsamer_tyler.ogg', enabled=True)
-        db.session.add(sound)
-        alle.sounds.append(sound)
-        jingles.sounds.append(sound)
-        tilo.sounds.append(sound)
-
-        sound = Sound(name="Jingle Hans-Jessen-Show", description="instrumental", soundfile='sounds/hans_jessen_show.ogg', enabled=True)
-        db.session.add(sound)
-        alle.sounds.append(sound)
-        jingles.sounds.append(sound)
-        tilo.sounds.append(sound)
-
-        sound = Sound(name="Joint rauchen", description="", soundfile='sounds/fdp_alte_joint_geraucht.ogg', enabled=True)
-        db.session.add(sound)
-        alle.sounds.append(sound)
-        
-        sound = Sound(name="Demokrat Hoeneß", description="", soundfile='sounds/grosser_demokrat.ogg', enabled=True)
-        db.session.add(sound)
-        alle.sounds.append(sound)
-        beste.sounds.append(sound)
-        
-        sound = Sound(name="Herzlichen Dank und Deutschland alles Gute", description="", soundfile='sounds/herzlichen_dank_deutschland_alles_gute.ogg', enabled=True)
-        db.session.add(sound)
-        alle.sounds.append(sound)
-        beste.sounds.append(sound)
-        
-        sound = Sound(name="Herzlichen Dank", description="", soundfile='sounds/herzlichen_dank.ogg', enabled=True)
-        db.session.add(sound)
-        alle.sounds.append(sound)
-        
-        sound = Sound(name="Entschuldigung", description="Andrea Nahles", soundfile='sounds/nahles_entschuldigung.ogg', enabled=True)
-        db.session.add(sound)
-        alle.sounds.append(sound)
-        beste.sounds.append(sound)
-        
-        sound = Sound(name="Klasse!", description="Marin Schulz", soundfile='sounds/schulz_klasse.ogg', enabled=True)
-        db.session.add(sound)
-        alle.sounds.append(sound)
-        
-        sound = Sound(name="Tschüss zusammen", description="Marin Schulz", soundfile='sounds/schulz_tschuess_zusammen.ogg', enabled=True)
-        db.session.add(sound)
-        alle.sounds.append(sound)
-        
-        sound = Sound(name="Tagesschau und Tagesthemen informieren Sie", description="", soundfile='sounds/tagesschau_und_tagesthemen.ogg', enabled=True)
-        db.session.add(sound)
-        alle.sounds.append(sound)
-        
-        sound = Sound(name="Wir kümmern uns", description="", soundfile='sounds/wir_kuemmern_uns.ogg', enabled=True)
-        db.session.add(sound)
-        alle.sounds.append(sound)
-        beste.sounds.append(sound)
-        
-        sound = Sound(name="Wolf soll im Wald bleiben", description="", soundfile='sounds/wolf_bleibt_im_wald.ogg', enabled=True)
-        db.session.add(sound)
-        alle.sounds.append(sound)
-        
-        sound = Sound(name="You are on your own", description="", soundfile='sounds/you_are_on_your_own.ogg', enabled=True)
-        db.session.add(sound)
-        alle.sounds.append(sound)
 
         db.session.commit()
     
@@ -186,6 +140,13 @@ def board(board):
 def create_board():
     boards = Board.query.all()
     return render_template('site/create_board.html', board=None, boards=boards)
+
+
+@mod_site.route('/search')
+def search():
+    boards = Board.query.all()
+    sounds = Sound.query.filter_by(enabled=True).all()
+    return render_template('site/search_sound.html', sounds=sounds, boards=boards)
 
 
 @mod_site.route('/soundspende/submit', methods=["POST"])

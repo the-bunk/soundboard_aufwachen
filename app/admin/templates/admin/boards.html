@@ -1,0 +1,53 @@
+{% from 'admin/includes/_formhelpers.html' import render_soundcard, include_soundfile, render_create_edit_board %}
+{% extends '/admin/base.html' %}
+{% block main_content %}
+
+<!-- MESSAGES-->
+{% include 'admin/includes/_messages.html' %}
+
+<div class="tile is-ancestor">
+    <!-- ADD BOARD -->
+    <div class="tile is-3 is-vertical is-parent">
+    </div>
+    <div class="tile is-6 is-vertical is-parent">
+        {{render_create_edit_board(sounds, board)}}
+    </div>
+    <div class="tile is-3 is-vertical ">
+    </div>
+</div>
+
+<!-- BOARDS LISTE-->
+<div id="scroll2boards" class="tile is-vertical table">
+	<p class="title">Boards verwalten</p>
+	<table id="table_users" class="table is-fullwidth">
+		<thead>
+			<tr>
+				<th><a id="bt_bname" href=# onclick="sortTable('table_boards', 0, 'bt_bname', true); return false;">Benutzer</a></th>
+				<th><a id="bt_bsounds" href=# onclick="sortTable('table_boards', 1, 'bt_bsounds', true); return false;">Sounds</a></th>
+				<th>bearbeiten</th>
+				<th>löschen</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			{% if boards %}
+			{% for b in boards %}
+			<tr>
+				<td>{{ b.name }}</td>
+				<td>
+					{% for s in b.sounds -%}
+					{% if loop.index == 1 %}{{s.name}}{% else %}, {{s.name}}{% endif %}
+					{%- endfor %}
+				</td>
+				<td><a href="/admin/boards/edit/{{ b.id }}">bearbeiten</a></td>
+				<td><a href="#" onclick="deleteBoard('{{ b.id }}'); return false;">löschen</a></td>
+			</tr>
+			{% endfor %}
+			{%endif %}
+		</tbody>
+	</table>
+</div>
+
+
+
+{% endblock %}

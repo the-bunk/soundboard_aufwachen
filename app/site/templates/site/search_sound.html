@@ -1,0 +1,29 @@
+{% from 'site/includes/_formhelpers.html' import render_soundcard, include_soundfile %}
+{% extends 'site/base.html' %}
+
+{% block main_content %}
+
+<!-- MESSAGES-->
+{% include 'site/includes/_messages.html' %}
+
+<!-- SEARCH -->
+        <div class="field">
+<div id="div_search" class="control ">
+  <input id="tb_search" class="input"  onkeyup="filter_sounds(); return false;" type="text" placeholder="Suche">
+</div>
+</div>
+
+
+<!-- SOUNDCARDS -->
+<div class="container content-wrapper">
+<div class="columns is-multiline">
+<!-- <div class="section"> -->
+<!-- <div class="columns is-multiline is-centered has-text-centered is-fullwidth"> -->
+    {% for s in sounds %}
+            {{ include_soundfile(s) }}
+            {{ render_soundcard(s) }}
+    {% endfor %}
+</div>
+</div>
+
+{% endblock %}
