@@ -3,10 +3,20 @@
 <div class="tabs">
     <ul>
         {% for b in boards %}
-        <li{% if b==board %} class="is-active" {% endif %}><a href='/board/{{b.id}}'>{{b.name}}</a></li>
+        <li{% if b==board %} class="is-active" {% endif %}>
+            <a href='/board/{{b.id}}'>
+                <span class="icon is-small"><i class="fas fa-comment" aria-hidden="true"></i></span>
+                <span>{{b.name}}</span>
+            </a>
+        </li>
             {% endfor %}
             <!-- <li{% if board==None and sounds==None %} class="is-active" {% endif %}><a href="/create_board"><del>neues Board</del></a></li> -->
-            <li{% if sounds %} class="is-active" {% endif %}><a href="/search">Suche</a></li>
+            <li{% if sounds %} class="is-active" {% endif %}>
+                <a href="/search">
+                    <span class="icon is-small"><i class="fas fa-search" aria-hidden="true"></i></span>
+                    <span>Suche</span>
+                </a>
+            </li>
     </ul>
     <button class="is-pulled-right" onclick="toggleModal(); return false;"><i class="fas fa-exclamation-triangle red"></i>Soundspende<i class="fas fa-exclamation-triangle red"></i></button>
 </div>
