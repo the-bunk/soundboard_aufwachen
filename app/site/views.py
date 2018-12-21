@@ -142,12 +142,6 @@ def board(board):
     return render_template('site/index.html', board=board, boards=boards)
 
 
-@mod_site.route('/create_board')
-def create_board():
-    boards = Board.query.all()
-    return render_template('site/create_board.html', board=None, boards=boards)
-
-
 @mod_site.route('/search')
 def search():
     boards = Board.query.all()

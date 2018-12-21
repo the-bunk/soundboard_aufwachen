@@ -10,7 +10,7 @@
 <div class="container content-wrapper">
 <div class="columns is-multiline">
     {% for s in board.sounds %}
-    {% if s.enabled %}
+    {% if s.enabled and not s.hidden %}
             {{ include_soundfile(s) }}
             {{ render_soundcard(s) }}
     {% endif %}

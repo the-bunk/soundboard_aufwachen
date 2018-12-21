@@ -26,6 +26,7 @@ class Sound(Base):
     soundfile = Column(String(500))
     count = Column(BigInteger, default=0)
     enabled = Column(Boolean, default=False)
+    hidden = Column(Boolean, default=False)
     boards = relationship(
         "Board",
         secondary=sounds_boards,
@@ -49,7 +50,7 @@ class Board(Base):
 
 
 class Tag(Base):
-    __tablename__ = 'sound'
+    __tablename__ = 'tag'
     id = Column(Integer, primary_key=True)
     tag = Column(String(80), unique=True, nullable=False)
     tag_lower = Column(String(80), unique=True, nullable=False)

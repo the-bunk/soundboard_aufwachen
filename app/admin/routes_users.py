@@ -20,7 +20,7 @@ def admin_users_user(uid):
     return render_template('admin/user.html', user=user, roles=roles)
 
 
-@mod_admin.route('/users/user2role', methods=['POST'])
+@mod_admin.route('/users/user2role', methods=['POST', 'GET'])
 def admin_users_user2role():
     data = request.get_json()
     user = user_datastore.get_user(data['user'])
