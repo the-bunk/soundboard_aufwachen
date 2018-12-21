@@ -4,19 +4,23 @@
     <ul>
         {% for b in boards %}
         <li{% if b==board %} class="is-active" {% endif %}>
+            {% if b.name == 'spezial' %} {% if current_user.has_role('spezial') %}
+            <a href='/spezial'>
+            <span class="icon is-small"><i class="fas fa-comment" aria-hidden="true"></i></span>
+            <span>Spezial</span>
+            </a> {% endif %} {% else %}
             <a href='/board/{{b.id}}'>
                 <span class="icon is-small"><i class="fas fa-comment" aria-hidden="true"></i></span>
                 <span>{{b.name}}</span>
-            </a>
-        </li>
+            </a> {% endif %}
+            </li>
             {% endfor %}
-            <!-- <li{% if board==None and sounds==None %} class="is-active" {% endif %}><a href="/create_board"><del>neues Board</del></a></li> -->
             <li{% if sounds %} class="is-active" {% endif %}>
                 <a href="/search">
-                    <span class="icon is-small"><i class="fas fa-search" aria-hidden="true"></i></span>
-                    <span>Suche</span>
-                </a>
-            </li>
+                <span class="icon is-small"><i class="fas fa-search" aria-hidden="true"></i></span>
+                <span>Suche</span>
+            </a>
+                </li>
     </ul>
     <button class="is-pulled-right" onclick="toggleModal(); return false;"><i class="fas fa-exclamation-triangle red"></i>Soundspende<i class="fas fa-exclamation-triangle red"></i></button>
 </div>
@@ -46,15 +50,13 @@
 
 <!-- SOUNDFILE -->
 {% macro include_soundfile(sound) %}
-    <audio id="{{sound.id}}">
-        <source src="{{ url_for('static', filename=sound.soundfile)}}" type="audio/ogg">
-        error
-    </audio> 
-{% endmacro %}
+<audio id="{{sound.id}}">
+    <source src="{{ url_for('static', filename=sound.soundfile)}}" type="audio/ogg">
+    error
+</audio> {% endmacro %}
 
 <!-- SOUNDSPENDE -->
 {% macro render_soundspende() %}
-
 <div class="modal-card">
     <section class="modal-card-body">
         <div class="field">
@@ -63,14 +65,12 @@
                 <input id="tb_name" class="input" type="text" placeholder="z.B. nix ist für free">
             </div>
         </div>
-
         <div class="field">
             <label class="label">Beschreibung</label>
             <div class="control">
                 <input id="tb_description" class="input" type="test" placeholder="z.B. Österreicher weiss bescheid">
             </div>
         </div>
-
         <div class="field">
             <label class="label">Sounddatei (<1MB)</label>
             <div class="file has-name is-boxed">

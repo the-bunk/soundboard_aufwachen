@@ -60,6 +60,7 @@ def admin_sounds():
     return render_template('admin/sounds.html', sounds=sounds, boards=boards, selected='sounds')
 
 
+### SOUNDS
 @mod_admin.route('/sound/submit', methods=["POST"])
 def sound_submit():
     name = remove_html(request.form['name'])
@@ -117,11 +118,8 @@ def sound_submit():
         if description:
             sound.description = description
             db.session.commit()
-        
-        print("BOEARDS:")
-        print(boards)
+
         for b in sound.boards:
-            print(b)
             if not str(b.id) in boards:
                 board = Board.query.filter_by(id=b.id).first()
                 sound.boards.remove(board)
@@ -135,6 +133,44 @@ def sound_submit():
         return "0"
 
 
+@mod_admin.route('/sounds/enabled', methods=["GET", "POST"])
+def sound_enable():
+    data = request.get_json()
+    sound_id = data["sound_id"]
+
+    sound = Sound.query.filter_by(id=sound_id).first()
+    sound.enabled = not sound.enabled
+    db.session.commit()
+
+    return str(sound.enabled)
+
+
+@mod_admin.route('/sounds/edit/<sound_id>')
+def sound_edit(sound_id):
+    sound = Sound.query.filter_by(id=sound_id).first()
+    boards = Board.query.all()
+    sounds = Sound.query.all()
+    return render_template('admin/sounds.html', sounds=sounds, boards=boards, sound=sound, selected='sounds')
+
+
+@mod_admin.route('/sound/delete/<sound_id>')
+def sound_delete(sound_id):
+    sound = Sound.query.filter_by(id=sound_id).first()
+
+    #datei löschen
+    filename = os.path.join(current_app.config['MAIN_STATIC_DIR'], sound.soundfile)
+    # filename = os.path.join(current_app.config['SOUNDS_DIR'], sound.soundfile)
+    if os.path.exists(filename):
+        os.remove(filename)
+
+    #datenbankeintrag löschen
+    db.session.delete(sound)
+    db.session.commit()
+
+    flash('Sound gelöscht.', 'success')
+
+
+### BOARDS
 @mod_admin.route('/board/submit', methods=["POST"])
 def board_submit():
     data = request.get_json()
@@ -182,44 +218,6 @@ def board_submit():
         flash('Board bearbeitet.', 'success')
 
     return "/admin/boards"
-
-
-
-@mod_admin.route('/sounds/enabled', methods=["GET", "POST"])
-def sound_enable():
-    data = request.get_json()
-    sound_id = data["sound_id"]
-
-    sound = Sound.query.filter_by(id=sound_id).first()
-    sound.enabled = not sound.enabled
-    db.session.commit()
-
-    return str(sound.enabled)
-
-
-@mod_admin.route('/sounds/edit/<sound_id>')
-def sound_edit(sound_id):
-    sound = Sound.query.filter_by(id=sound_id).first()
-    boards = Board.query.all()
-    sounds = Sound.query.all()
-    return render_template('admin/sounds.html', sounds=sounds, boards=boards, sound=sound, selected='sounds')
-
-
-@mod_admin.route('/sound/delete/<sound_id>')
-def sound_delete(sound_id):
-    sound = Sound.query.filter_by(id=sound_id).first()
-    
-    #datei löschen
-    filename = os.path.join(current_app.config['MAIN_STATIC_DIR'], sound.soundfile)
-    # filename = os.path.join(current_app.config['SOUNDS_DIR'], sound.soundfile)
-    if os.path.exists(filename):
-        os.remove(filename)
-
-    #datenbankeintrag löschen
-    db.session.delete(sound)
-    db.session.commit()
-
-    flash('Sound gelöscht.', 'success')
     return "/admin/sounds"
 
 
@@ -245,5 +243,5 @@ def board_delete(board_id):
     return "/admin/boards"
 
 
-
+### USERS
 from .routes_users import *

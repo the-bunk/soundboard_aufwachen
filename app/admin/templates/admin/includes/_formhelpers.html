@@ -36,9 +36,8 @@
     <source src="" type="audio/mpeg">
 {% endif %} 
 error
-</audio> 
+</audio>
 {% endmacro %}
-
 
 {% macro render_create_edit_board(sounds, board) %}
 <div class="tile is-child section">
@@ -51,49 +50,43 @@ error
     </div>
     <div id="sounds_to_board" class="field">
         {% for s in sounds %}
-        <a id="sound_{{ s.id}}" data-id="{{ s.id}}" class="button spaced {% if board and s in board.sounds %}is-success{% else %}is-danger{% endif %}" href="#" onclick="toggleSoundToBoard('{{ s.id }}'); return false;">{{ s.name }}</a>
-        {% endfor %}
+        <a id="sound_{{ s.id}}" data-id="{{ s.id}}" class="button spaced {% if board and s in board.sounds %}is-success{% else %}is-danger{% endif %}" href="#" onclick="toggleSoundToBoard('{{ s.id }}'); return false;">{{ s.name }}</a> {% endfor %}
     </div>
     <br/>
     <a id="bt_submit" class="button is-info is-pulled-right" href="#" onclick="submitBoard({% if board %}{{board.id}}{% else %}-1{% endif %}); return false;">
         Bestätigen
     </a>
 </div>
-{% endmacro %}
-
-
-{% macro render_create_edit_sound(boards, sound) %}
-        <div class="tile is-child section">
-            <p class="title">Sound hinzufügen</p>
-            <div class="field">
-                <label class="label">Name</label>
-                <div class="control">
-                    <input id="tb_name" class="input" type="text" placeholder="z.B. nix ist für free" value="{% if sound%}{{sound.name}}{% endif %}">
-                </div>
-            </div>
-            <div class="field">
-                <label class="label">Beschreibung</label>
-                <div class="control">
-                    <input id="tb_description" class="input" type="test" placeholder="z.B. Österreicher weiss bescheid" value="{% if sound%}{{sound.name}}{% endif %}">
-                </div>
-            </div>
-            <div class="field">
-                <label class="label">Sounddatei (<1MB, ogg)</label>
-                <div class="file has-name is-boxed">
-                    <input type="file" class="inputfile inputfile-2" id="soundfile">
-                    <label for="file"></span></label>
-                </div>
-            </div>
-            <br/>
-    <div id="sounds_to_board" class="field">
-                <label class="label">Boards</label>
-        {% for b in boards %}
-        <a id="sound_{{ b.id}}" data-id="{{ b.id}}" class="button spaced {% if sound and b in sound.boards %}is-success{% else %}is-danger{% endif %}" href="#" onclick="toggleSoundToBoard('{{ b.id }}'); return false;">{{ b.name }}</a>
-        {% endfor %}
+{% endmacro %} {% macro render_create_edit_sound(boards, sound) %}
+<div class="tile is-child section">
+    <p class="title">Sound hinzufügen</p>
+    <div class="field">
+        <label class="label">Name</label>
+        <div class="control">
+            <input id="tb_name" class="input" type="text" placeholder="z.B. nix ist für free" value="{% if sound%}{{sound.name}}{% endif %}">
+        </div>
     </div>
-            <br/>
-            <a id="bt_submit" class="button is-info is-pulled-right" href="#" onclick="submitSound({% if sound %}{{sound.id}}{% else %}-1{% endif %}); return false;">
+    <div class="field">
+        <label class="label">Beschreibung</label>
+        <div class="control">
+            <input id="tb_description" class="input" type="test" placeholder="z.B. Österreicher weiss bescheid" value="{% if sound%}{{sound.name}}{% endif %}">
+        </div>
+    </div>
+    <div class="field">
+        <label class="label">Sounddatei (<1MB, ogg)</label>
+        <div class="file has-name is-boxed">
+            <input type="file" class="inputfile inputfile-2" id="soundfile">
+            <label for="file"></span></label>
+        </div>
+    </div>
+    <br/>
+    <div id="sounds_to_board" class="field">
+        <label class="label">Boards</label> {% for b in boards %}
+        <a id="sound_{{ b.id}}" data-id="{{ b.id}}" class="button spaced {% if sound and b in sound.boards %}is-success{% else %}is-danger{% endif %}" href="#" onclick="toggleSoundToBoard('{{ b.id }}'); return false;">{{ b.name }}</a> {% endfor %}
+    </div>
+    <br/>
+    <a id="bt_submit" class="button is-info is-pulled-right" href="#" onclick="submitSound({% if sound %}{{sound.id}}{% else %}-1{% endif %}); return false;">
 				Bestätigen
 			</a>
-        </div>
+</div>
 {% endmacro %}

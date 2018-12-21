@@ -121,12 +121,18 @@ def init_my_blueprint():
     print("site done")
 
 
-
 @mod_site.route('/')
 def home():
     boards = Board.query.all()
     board = Board.query.filter_by(name="beste").first()
     return render_template('site/index.html', board=board, boards=boards)
+
+
+@mod_site.route('/spezial')
+def spezial():
+    boards = Board.query.all()
+    board = Board.query.filter_by(name="spezial").first()
+    return render_template('site/spezial.html', board=board, boards=boards)
 
 
 @mod_site.route('/board/<board>')

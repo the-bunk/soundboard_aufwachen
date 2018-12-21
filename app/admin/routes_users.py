@@ -19,6 +19,7 @@ def admin_users_user(uid):
         return redirect('/admin/users/')
     return render_template('admin/user.html', user=user, roles=roles)
 
+
 @mod_admin.route('/users/user2role', methods=['POST'])
 def admin_users_user2role():
     data = request.get_json()
@@ -44,6 +45,7 @@ def admin_users_adduser():
     user_datastore.activate_user(user)  # is this needed?
     return "/admin"
 
+
 @mod_admin.route('/users/remove_user/<iduser>')
 def admin_remove_user(iduser):
     user = user_datastore.get_user(iduser)
@@ -51,6 +53,7 @@ def admin_remove_user(iduser):
     user_datastore.commit()
     flash("Benutzer wurde gelöscht.", "success")
     return "/admin"
+
 
 @mod_admin.route('/users/role/<rolename>')
 def admin_users_role(rolename):
@@ -64,6 +67,7 @@ def admin_users_role(rolename):
         return redirect('/admin/users/')
     return render_template('admin/role.html', users=users, role=role)
 
+
 @mod_admin.route('/users/addrole/', methods=['POST'])
 def admin_roles_addrole():
     data = request.get_json()
@@ -71,6 +75,7 @@ def admin_roles_addrole():
     user_datastore.commit()
     flash("Rolle wurde angelegt.", "success")
     return "/admin"
+
 
 @mod_admin.route('/users/remove_role/<rolename>')
 def admin_remove_role(rolename):
