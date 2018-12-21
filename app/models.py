@@ -11,6 +11,12 @@ sounds_boards = Table('sounds_boards', Base.metadata,
 )
 
 
+sounds_tags = Table('sounds_tags', Base.metadata,
+    Column('sound_id', Integer, ForeignKey('sound.id')),
+    Column('tag_id', Integer, ForeignKey('tag.id'))
+)
+
+
 class Sound(Base):
     __tablename__ = 'sound'
     id = Column(Integer, primary_key=True)
@@ -23,6 +29,10 @@ class Sound(Base):
     boards = relationship(
         "Board",
         secondary=sounds_boards,
+        back_populates="sounds")
+    tags = relationship(
+        "Tag",
+        secondary=sounds_tags,
         back_populates="sounds")
 
 
@@ -37,3 +47,13 @@ class Board(Base):
         secondary=sounds_boards,
         back_populates="boards")
 
+
+class Tag(Base):
+    __tablename__ = 'sound'
+    id = Column(Integer, primary_key=True)
+    tag = Column(String(80), unique=True, nullable=False)
+    tag_lower = Column(String(80), unique=True, nullable=False)
+    sounds = relationship(
+        "Sound",
+        secondary=sounds_tags,
+        back_populates="tags")
