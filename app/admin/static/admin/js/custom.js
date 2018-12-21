@@ -50,7 +50,7 @@ function submitBoard(board_id) {
   var target = "redirect"
   var route = "/admin/board/submit"
   var sendData = JSON.stringify({
-      board_id: board_id,
+    board_id: board_id,
     name: name,
     sounds: sounds,
   })
@@ -147,22 +147,24 @@ function sortTable(tablename, col, button, desc) {
 			 one from current row and one from the next:*/
       x = rows[i].getElementsByTagName("td")[col]
       y = rows[i + 1].getElementsByTagName("td")[col]
+      x_val = x.innerHTML.replace(/(<([^>]+)>)/gi, "").toLowerCase()
+      y_val = y.innerHTML.replace(/(<([^>]+)>)/gi, "").toLowerCase()
+      // check if we sort strings or numbers
+      if (!isNaN(x_val) && !isNaN(y_val)) {
+        x_val = 1 * x_val
+        y_val = 1 * y_val
+      }
+
       if (desc) {
         // check if the two rows should switch place:
-        if (
-          x.innerHTML.replace(/(<([^>]+)>)/gi, "").toLowerCase() <
-          y.innerHTML.replace(/(<([^>]+)>)/gi, "").toLowerCase()
-        ) {
+        if (x_val > y_val) {
           // if so, mark as a switch and break the loop:
           shouldSwitch = true
           break
         }
       } else {
         // check if the two rows should switch place:
-        if (
-          x.innerHTML.replace(/(<([^>]+)>)/gi, "").toLowerCase() >
-          y.innerHTML.replace(/(<([^>]+)>)/gi, "").toLowerCase()
-        ) {
+        if (x_val < y_val) {
           // if so, mark as a switch and break the loop:
           shouldSwitch = true
           break
@@ -199,20 +201,20 @@ function toggleSoundEnabled(sound_id) {
 
 function deleteSound(sound_id) {
   if (userConfirmation("Sound löschen?")) {
-  var target = "redirect"
-  var route = "/admin/sound/delete/" + sound_id
+    var target = "redirect"
+    var route = "/admin/sound/delete/" + sound_id
 
-  var req = getRequest()
-  if (req != undefined) {
-    req.onreadystatechange = function() {
-      loadDiv(target)
+    var req = getRequest()
+    if (req != undefined) {
+      req.onreadystatechange = function() {
+        loadDiv(target)
+      }
+      req.open("GET", route, true)
+      req.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
+      req.send()
+      return
     }
-    req.open("GET", route, true)
-    req.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
-    req.send()
-    return
   }
-}
 }
 
 function userConfirmation(text) {
