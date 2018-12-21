@@ -91,12 +91,13 @@ file.onchange = function() {
   }
 }
 
-function submitSound() {
+function submitSound(sound_id) {
   document.getElementById("bt_submit").className =
     "button is-pulled-right is-info is-loading"
   var name = document.getElementById("tb_name").value
   var description = document.getElementById("tb_description").value
   var soundfile = document.getElementById("soundfile")
+  var boards = getSoundsToBoard()
 
   // if (!isStr(name)) {
   //     alert("error: name");
@@ -111,6 +112,8 @@ function submitSound() {
   formData.append("name", name)
   formData.append("description", description)
   formData.append("soundfile", soundfile.files[0])
+  formData.append("boards", boards)
+  formData.append("sound_id", sound_id)
 
   var route = "/admin/sound/submit"
 

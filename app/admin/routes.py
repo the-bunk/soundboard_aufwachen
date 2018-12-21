@@ -55,33 +55,84 @@ def admin_boards():
 
 @mod_admin.route('/sounds')
 def admin_sounds():
+    boards = Board.query.all()
     sounds = Sound.query.all()
-    return render_template('admin/sounds.html', sounds=sounds, selected='sounds')
+    return render_template('admin/sounds.html', sounds=sounds, boards=boards, selected='sounds')
 
 
 @mod_admin.route('/sound/submit', methods=["POST"])
 def sound_submit():
     name = remove_html(request.form['name'])
     description = remove_html(request.form['description'])
-    soundfile = request.files['soundfile']
+    if 'soundfile' in request.files.to_dict():
+        soundfile = request.files['soundfile']
+    else:
+        soundfile = None
+    boards = request.form['boards']
+    sound_id = request.form['sound_id']
 
-    if Sound.query.filter_by(name=name).first():
-        flash('Dieser Name existiert bereits.', 'danger')
-        return "1"
 
-    # save file
-    filename = secure_filename(soundfile.filename)
-    db_filename = "sounds/" + filename
-    filename = os.path.join(current_app.config['SOUNDS_DIR'], filename)
-    soundfile.save(filename)
+    if sound_id == -1:
+        # neuen sound erstellen
+        if not name:
+            flash('Kein Name.', 'danger')
+            return redirect("/admin/sounds")
+        sound = Sound.query.filter_by(name=name).first()
+        if sound:
+            flash('Dieser Name existiert bereits.', 'danger')
+            return redirect("/admin/sounds")
+        # save file
+        filename = secure_filename(soundfile.filename)
+        db_filename = "sounds/" + filename
+        filename = os.path.join(current_app.config['SOUNDS_DIR'], filename)
+        soundfile.save(filename)
+        # add to database
+        new_sound = Sound(name=name, description=description, soundfile=db_filename, enabled=True)
+        db.session.add(new_sound)
+        db.session.commit()
+        for b in boards:
+            board = Board.query.filter_by(id=b).first()
+            if board:
+                new_sound.boards.append(board)
 
-    # add to database
-    new_sound = Sound(name=name, description=description, soundfile=db_filename, enabled=True)
-    db.session.add(new_sound)
-    db.session.commit()
+        flash('Soundfile übertragen, dankeschön.', 'success')
+        return "0"
 
-    flash('Soundfile übertragen, dankeschön.', 'success')
-    return "0"
+    else:
+        # sound bearbeiten
+        sound = Sound.query.filter_by(id=sound_id).first()
+        if not sound:
+            flash('Ein Fehler ist aufgetreten.', 'danger')
+            return redirect("/admin/sounds")
+        # save file
+        if soundfile:
+            filename = secure_filename(soundfile.filename)
+            db_filename = "sounds/" + filename
+            filename = os.path.join(current_app.config['SOUNDS_DIR'], filename)
+            soundfile.save(filename)
+        # add to database
+        if name:
+            sound.name = name
+            db.session.commit()
+        if description:
+            sound.description = description
+            db.session.commit()
+        
+        print("BOEARDS:")
+        print(boards)
+        for b in sound.boards:
+            print(b)
+            if not str(b.id) in boards:
+                board = Board.query.filter_by(id=b.id).first()
+                sound.boards.remove(board)
+                db.session.commit()
+        for b_id in boards:
+            board = Board.query.filter_by(id=b_id).first()
+            if not board in sound.boards:
+                sound.boards.append(board)
+                db.session.commit()
+        flash('Soundfile bearbeitet.', 'success')
+        return "0"
 
 
 @mod_admin.route('/board/submit', methods=["POST"])
@@ -149,8 +200,9 @@ def sound_enable():
 @mod_admin.route('/sounds/edit/<sound_id>')
 def sound_edit(sound_id):
     sound = Sound.query.filter_by(id=sound_id).first()
-
-    return render_template('admin/edit_sound.html', sound=sound)
+    boards = Board.query.all()
+    sounds = Sound.query.all()
+    return render_template('admin/sounds.html', sounds=sounds, boards=boards, sound=sound, selected='sounds')
 
 
 @mod_admin.route('/sound/delete/<sound_id>')
