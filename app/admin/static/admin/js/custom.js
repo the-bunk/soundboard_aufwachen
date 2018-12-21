@@ -122,6 +122,18 @@ function userConfirmation(text) {
     return r
 }
 
+function getEnabledButtons(container) {
+    var sound_list = []
+    var x = document.getElementById(container)
+    var y = x.getElementsByTagName("a")
+    for (let item of y) {
+        if (item.classList.contains("is-success")) {
+            sound_list.push(item.getAttribute("data-id"))
+        }
+    }
+    return sound_list
+}
+
 function toggleSoundToBoard(sound_id) {
     var e = document.getElementById("sound_" + sound_id)
     if (e.classList.contains("is-danger")) {
@@ -133,21 +145,9 @@ function toggleSoundToBoard(sound_id) {
     }
 }
 
-function getSoundsToBoard() {
-    var sound_list = []
-    var x = document.getElementById("sounds_to_board")
-    var y = x.getElementsByTagName("a")
-    for (let item of y) {
-        if (item.classList.contains("is-success")) {
-            sound_list.push(item.getAttribute("data-id"))
-        }
-    }
-    return sound_list
-}
-
 function submitBoard(board_id) {
     var name = document.getElementById("tb_name").value
-    var sounds = getSoundsToBoard()
+    var sounds = getEnabledButtons("sounds_to_board")
     var target = "redirect"
     var route = "/admin/board/submit"
     var sendData = JSON.stringify({
@@ -336,5 +336,19 @@ function editUserInRole(set, user, role) {
     } else {
         set = 1
     }
-    makeRequest(route, target, null)
+  req = new XMLHttpRequest()
+  if (window.XMLHttpRequest) {
+    req = new XMLHttpRequest()
+  } else if (window.ActiveXObject) {
+    req = new ActiveXObject("Microsoft.XMLHTTP")
+  }
+  if (req != undefined) {
+    req.onreadystatechange = function() {
+      changeClass(target, set, user, role)
+    }
+    req.open("POST", route, true)
+    req.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
+    req.send(sendData)
+  }
+
 }
