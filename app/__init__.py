@@ -2,7 +2,7 @@ from os import path
 from flask import Flask
 from flask_security import current_user
 from flask_session import Session
-from app.core import db, security
+from app.core import db, security, mail
 
 import app.models as models_sounds
 from .site import mod_site
@@ -14,6 +14,7 @@ app = Flask(__name__,  static_folder='static')
 app.config.from_pyfile('config.py')
 
 Session(app)
+mail.init_app(app)
 
 db.init_app(app)
 db.create_all(app=app)  # app=app weil sonst applicationbound error

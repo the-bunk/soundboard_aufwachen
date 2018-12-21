@@ -6,8 +6,11 @@ core module
 import re
 from flask_sqlalchemy import SQLAlchemy
 from flask_security import Security
+from flask_mail import Mail
 
 db = SQLAlchemy()
+
+mail = Mail()
 
 security = Security()
 

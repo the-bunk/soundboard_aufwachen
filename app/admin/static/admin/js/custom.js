@@ -20,6 +20,23 @@ function loadDiv(target) {
   }
 }
 
+function makeRequest(route, target, sendData) {
+  var req = getRequest()
+  if (req != undefined) {
+    req.onreadystatechange = function() {
+      loadDiv(target)
+    }
+    if (sendData == null) {
+      req.open("GET", route, true)
+    } else {
+      req.open("POST", route, true)
+    }
+    req.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
+    req.send(sendData)
+    return
+  }
+}
+
 function toggleSoundToBoard(sound_id) {
   var e = document.getElementById("sound_" + sound_id)
   if (e.classList.contains("is-danger")) {
@@ -237,5 +254,118 @@ function deleteBoard(board_id) {
       req.send()
       return
     }
+  }
+}
+
+// SCROLLTO
+function scroll(scrollTo) {
+  if (scrollTo != "") {
+    document.getElementById(scrollTo).scrollIntoView()
+    document.cookie = "scroll-to=; path=/;"
+  }
+}
+
+function addUser() {
+  var email = document.getElementById("admin_add_user_email").value
+  // if (!isEmail(email)) {
+  //   alert("error: email")
+  //   return
+  // }
+  var sendData = JSON.stringify({
+    email: email,
+  })
+  var route = "/admin/users/adduser/"
+  var target = "redirect"
+  makeRequest(route, target, sendData)
+}
+
+function deleteUser(id, name) {
+  if (!confirm("Benutzer " + name + " löschen?")) {
+    return
+  }
+  var route = "/admin/users/remove_user/" + id
+  var target = "redirect"
+  document.cookie = "scroll-to=scroll2user; path=/;"
+  makeRequest(route, target, null)
+}
+
+function addRole() {
+  var name = document.getElementById("admin_add_role_name").value
+  var description = document.getElementById("admin_add_role_description").value
+  // Eingaben prüfen: name
+  // if (!isStr(name)) {
+  //   alert("error: name")
+  //   return
+  // }
+  // if (!isStr(description)) {
+  //   alert("error: name")
+  //   return
+  // }
+  var sendData = JSON.stringify({
+    name: name,
+    description: description,
+  })
+  var route = "/admin/users/addrole/"
+  var target = "redirect"
+
+  makeRequest(route, target, sendData)
+}
+
+function deleteRole(id, name) {
+  if (!confirm("Rolle " + name + " löschen?")) {
+    return
+  }
+  var route = "/admin/users/remove_role/" + name
+  var target = "redirect"
+  document.cookie = "scroll-to=scroll2role; path=/;"
+  makeRequest(route, target, null)
+}
+
+function editUserInRole(set, user, role) {
+  //TODO das ist ganz schlimm und sollte mal geändert werden ;)
+  function changeClass(target, set, user, role) {
+    if (req.readyState == 4) {
+      if (req.status == 200) {
+        var link =
+          "editUserInRole('" +
+          set +
+          "','" +
+          user +
+          "','" +
+          role +
+          "'); return false;"
+        document.getElementById(target).className = req.responseText
+        document.getElementById(target).setAttribute("onclick", link)
+      } else {
+        alert("error: editUserInRole()")
+      }
+    }
+  }
+  var target = "u2r_" + role + "_" + user
+  document.getElementById(target).className += " is-loading "
+  var route = "/admin/users/user2role"
+  var sendData = JSON.stringify({
+    val: set,
+    user: user,
+    role: role,
+  })
+  if (set == 1) {
+    set = 0
+  } else {
+    set = 1
+  }
+  req = new XMLHttpRequest()
+  if (window.XMLHttpRequest) {
+    req = new XMLHttpRequest()
+  } else if (window.ActiveXObject) {
+    req = new ActiveXObject("Microsoft.XMLHTTP")
+  }
+  if (req != undefined) {
+    req.onreadystatechange = function() {
+      changeClass(target, set, user, role)
+    }
+    req.open("POST", route, true)
+    req.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
+    req.send(sendData)
   }
 }

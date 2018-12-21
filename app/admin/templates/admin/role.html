@@ -1,0 +1,32 @@
+{% from 'admin/includes/_formhelpers.html' import render_soundcard, include_soundfile %}
+{% extends '/admin/base.html' %}
+
+{% block main_content %}
+
+<!-- MESSAGES-->
+{% include 'admin/includes/_messages.html' %}
+
+<!-- CONTENT -->
+<div class="section content">
+	<div class="tile is-ancestor">
+		<div class="tile is-parent">
+			<div class="tile is-child">
+				<h1>Rolle - {{ role.name }}</h1>
+				<p>{{ role.description }}</p>
+				<h3>Benutzer</h3>
+				<p>
+				{% for u in users %}
+				{% if u.has_role(role) %}
+				<a id="u2r_{{ role.name }}_{{ u.id }}" class="button is-success spaced" href="#" onclick="editUserInRole('0','{{ u.id }}', '{{ role.name }}'); return false;">{{ u.email }}</a>
+				{% else %}
+				<a class="button is-danger spaced" id="u2r_{{ role.name }}_{{ u.id}}" href="#" onclick="editUserInRole('1','{{ u.id }}', '{{ role.name }}'); return false;">{{ u.email }}</a>
+				{% endif %}
+				{% endfor %}
+				</p>
+				<p><a class="button is-info is-pulled-right" href="/admin/users">Fertig</a></p>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

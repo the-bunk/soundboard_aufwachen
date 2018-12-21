@@ -5,12 +5,6 @@
 		<div class="tile is-child section">
 			<p class="title">Benutzer hinzufügen</p>
 			<div class="field">
-				<label class="label">Name</label>
-				<div class="control">
-					<input id="admin_add_user_name" class="input" type="text" placeholder="bspw. Name">
-				</div>
-			</div>
-			<div class="field">
 				<label class="label">E-Mail</label>
 				<div class="control">
 					<input id="admin_add_user_email" class="input" type="email" placeholder="bspw. name@server.org">
@@ -51,7 +45,6 @@
 	<table id="table_users" class="table is-fullwidth">
 		<thead>
 			<tr>
-				<th><a id="bt_uname" href=# onclick="sortTable('table_users', 0, 'bt_uname', true); return false;">Benutzer</a></th>
 				<th><a id="bt_umail" href=# onclick="sortTable('table_users', 1, 'bt_umail', true); return false;">E-Mail</a></th>
 				<th><a id="bt_uroles" href=# onclick="sortTable('table_users', 2, 'bt_uroles', true); return false;">Rollen</a></th>
 				<th><a id="bt_uactive" href=# onclick="sortTable('table_users', 3, 'bt_uactive', true); return false;">aktiv</a></th>
