@@ -7,7 +7,6 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:///test.db'  # relativer pfad
 SQLALCHEMY_TRACK_MODIFICATIONS = True
 SQLALCHEMY_ECHO=False
 
-SECRET_KEY = "e89ashdjsahb"
 SESSION_TYPE = 'filesystem'  # ist das okay?
 
 SECURITY_REGISTERABLE = False
