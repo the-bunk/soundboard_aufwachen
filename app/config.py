@@ -29,3 +29,6 @@ MAIL_PASSWORD = ''
 MAIN_STATIC_DIR = 'app/static'
 SOUNDS_DIR = 'app/static/sounds'
 MAX_CONTENT_LENGTH = 1 * 1024 * 1024
+
+ADMIN_EMAIL = ''
+ADMIN_PASSWORD = ''

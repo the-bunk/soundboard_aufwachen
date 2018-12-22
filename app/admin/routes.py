@@ -18,7 +18,7 @@ def init_my_blueprint():
         user_datastore.find_or_create_role(role)
 
     users = [
-        ['the_bunk@gmx.de', 'test1234', ['admin']]
+        [current_app.config['ADMIN_EMAIL'], current_app.config['ADMIN_PASSWORD'], ['admin']]
     ]
     for u in users:
         if not user_datastore.get_user(u[0]):
