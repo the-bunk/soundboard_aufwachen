@@ -1,10 +1,3 @@
-var file = document.getElementById("file")
-file.onchange = function() {
-    if (file.files.length > 0) {
-        document.getElementById("filename").innerHTML = file.files[0].name
-    }
-}
-
 function getRequest() {
     req = new XMLHttpRequest()
     if (window.XMLHttpRequest) {
@@ -134,8 +127,8 @@ function getEnabledButtons(container) {
     return sound_list
 }
 
-function toggleSoundToBoard(sound_id) {
-    var e = document.getElementById("sound_" + sound_id)
+function toggleButton(id, prefix) {
+    var e = document.getElementById(prefix + id)
     if (e.classList.contains("is-danger")) {
         e.classList.remove("is-danger")
         e.classList.add("is-success")
@@ -164,26 +157,20 @@ function submitSound(sound_id) {
     var name = document.getElementById("tb_name").value
     var description = document.getElementById("tb_description").value
     var soundfile = document.getElementById("soundfile")
-    var boards = getSoundsToBoard()
-
-    // if (!isStr(name)) {
-    //     alert("error: name");
-    //     return;
-    // }
-    // if (!isStr(description)) {
-    //     alert("error: description");
-    //     return;
-    // }
+    var tags = document.getElementById("tb_tags").value
+    var tags_id = getEnabledButtons("tags")
+    var boards = getEnabledButtons("boards_to_sound")
 
     var formData = new FormData()
     formData.append("name", name)
     formData.append("description", description)
     formData.append("soundfile", soundfile.files[0])
     formData.append("boards", boards)
+    formData.append("tags", tags)
+    formData.append("tags_id", tags_id)
     formData.append("sound_id", sound_id)
 
     var route = "/admin/sound/submit"
-
     var target = "redirect"
     // KRÜCKE
     var request = new XMLHttpRequest()

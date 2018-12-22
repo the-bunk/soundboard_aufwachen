@@ -6,7 +6,7 @@ from flask_security import login_required, roles_accepted
 from werkzeug.utils import secure_filename
 from app import db
 from app.core import remove_html
-from app.models import Board, Sound
+from app.models import Board, Sound, Tag
 from .models_security import User, Role, user_datastore
 
 mod_admin = Blueprint('admin', __name__, template_folder='templates', static_folder='static/admin')
@@ -57,7 +57,8 @@ def admin_boards():
 def admin_sounds():
     boards = Board.query.all()
     sounds = Sound.query.all()
-    return render_template('admin/sounds.html', sounds=sounds, boards=boards, selected='sounds')
+    tags = Tag.query.all()
+    return render_template('admin/sounds.html', sounds=sounds, boards=boards, tags=tags, selected='sounds')
 
 
 ### SOUNDS
@@ -71,17 +72,35 @@ def sound_submit():
         soundfile = None
     boards = request.form['boards']
     sound_id = request.form['sound_id']
-
+    tags_str = request.form['tags'].split(',')
+    tags_id = request.form['tags_id']
+    # tags sammeln
+    tags = []
+    for t in tags_str:
+        t = t.strip()
+        if t.replace(" ","") == "":
+            continue
+        tag = Tag.query.filter_by(tag=t).first()
+        if not tag:
+            tag = Tag(tag=t, tag_lower=t.lower())
+            db.session.add(tag)
+            db.session.commit()
+        tags.append(tag)
+    for t in tags_id:
+        tag = Tag.query.filter_by(id=t).first()
+        if tag:
+            tags.append(tag)
 
     if sound_id == -1:
         # neuen sound erstellen
         if not name:
             flash('Kein Name.', 'danger')
-            return redirect("/admin/sounds")
+            return "0"
         sound = Sound.query.filter_by(name=name).first()
         if sound:
             flash('Dieser Name existiert bereits.', 'danger')
-            return redirect("/admin/sounds")
+            print("NAMEEE")
+            return "0"
         # save file
         filename = secure_filename(soundfile.filename)
         db_filename = "sounds/" + filename
@@ -96,6 +115,11 @@ def sound_submit():
             if board:
                 new_sound.boards.append(board)
 
+        for t in tags:
+            new_sound.tags.append(t)
+
+        db.session.commit()
+
         flash('Soundfile übertragen, dankeschön.', 'success')
         return "0"
 
@@ -107,28 +131,34 @@ def sound_submit():
             return redirect("/admin/sounds")
         # save file
         if soundfile:
-            filename = secure_filename(soundfile.filename)
-            db_filename = "sounds/" + filename
+            filename = secure_filename(sound.soundfile)
             filename = os.path.join(current_app.config['SOUNDS_DIR'], filename)
             soundfile.save(filename)
         # add to database
         if name:
             sound.name = name
-            db.session.commit()
         if description:
             sound.description = description
-            db.session.commit()
 
         for b in sound.boards:
             if not str(b.id) in boards:
-                board = Board.query.filter_by(id=b.id).first()
-                sound.boards.remove(board)
-                db.session.commit()
+                sound.boards.remove(b)
         for b_id in boards:
             board = Board.query.filter_by(id=b_id).first()
             if not board in sound.boards:
                 sound.boards.append(board)
-                db.session.commit()
+        # tags entfernen
+        for t in sound.tags:
+            if not t in tags:
+                sound.tags.remove(t)
+        # tags hinzufügen
+        for t in tags:
+            print(t)
+            if not t in sound.tags:
+                sound.tags.append(t)
+
+        db.session.commit()
+
         flash('Soundfile bearbeitet.', 'success')
         return "0"
 
@@ -150,7 +180,8 @@ def sound_edit(sound_id):
     sound = Sound.query.filter_by(id=sound_id).first()
     boards = Board.query.all()
     sounds = Sound.query.all()
-    return render_template('admin/sounds.html', sounds=sounds, boards=boards, sound=sound, selected='sounds')
+    tags = Tag.query.all()
+    return render_template('admin/sounds.html', sounds=sounds, boards=boards, sound=sound, tags=tags, selected='sounds')
 
 
 @mod_admin.route('/sound/delete/<sound_id>')
@@ -168,6 +199,7 @@ def sound_delete(sound_id):
     db.session.commit()
 
     flash('Sound gelöscht.', 'success')
+    return "/admin/sounds"
 
 
 ### BOARDS
@@ -218,7 +250,6 @@ def board_submit():
         flash('Board bearbeitet.', 'success')
 
     return "/admin/boards"
-    return "/admin/sounds"
 
 
 @mod_admin.route('/boards/edit/<board_id>')
