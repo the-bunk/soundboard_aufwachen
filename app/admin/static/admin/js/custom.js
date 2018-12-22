@@ -236,12 +236,10 @@ function deleteBoard(board_id) {
 
 function addUser() {
     var email = document.getElementById("admin_add_user_email").value
-    // if (!isEmail(email)) {
-    //   alert("error: email")
-    //   return
-    // }
+    var password = document.getElementById("admin_add_user_password").value
     var sendData = JSON.stringify({
         email: email,
+        password: password,
     })
     var route = "/admin/users/adduser/"
     var target = "redirect"

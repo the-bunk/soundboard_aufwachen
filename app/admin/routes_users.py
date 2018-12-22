@@ -38,10 +38,17 @@ def admin_users_user2role():
 @mod_admin.route('/users/adduser/', methods=['POST'])
 def admin_users_adduser():
     data = request.get_json()
-    user = user_datastore.create_user(email=data['email'], confirmed_at=datetime.datetime.now(), active=True)
+    email = data['email']
+    password = data['password']
+    user = user_datastore.get_user(email)
+    if user:
+        flash("Benutzer existiert bereits.", "danger")
+        return "/admin"
+
+    user = user_datastore.create_user(email=email, password=password, confirmed_at=datetime.datetime.now(), active=True)
     user_datastore.commit()
     flash("Benutzer wurde angelegt.", "success")
-    recoverable.send_reset_password_instructions(user)
+    # recoverable.send_reset_password_instructions(user)  # email geht leider nicht
     user_datastore.activate_user(user)  # is this needed?
     return "/admin"
 

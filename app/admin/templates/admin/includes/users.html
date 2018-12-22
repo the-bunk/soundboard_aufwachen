@@ -4,12 +4,22 @@
 	<div class="tile is-6 is-vertical is-parent">
 		<div class="tile is-child section">
 			<p class="title">Benutzer hinzufügen</p>
-			<div class="field">
-				<label class="label">E-Mail</label>
-				<div class="control">
-					<input id="admin_add_user_email" class="input" type="email" placeholder="bspw. name@server.org">
-				</div>
-			</div>
+            <div class="field">
+              <p class="control has-icons-left has-icons-right">
+                <input id="admin_add_user_email" class="input" type="email" placeholder="Email">
+                <span class="icon is-small is-left">
+                  <i class="fas fa-envelope"></i>
+                </span>
+              </p>
+            </div>
+            <div class="field">
+              <p class="control has-icons-left">
+                <input id="admin_add_user_password" class="input" type="password" placeholder="Password">
+                <span class="icon is-small is-left">
+                  <i class="fas fa-lock"></i>
+                </span>
+              </p>
+            </div>
 			<a id="btAddUser" class="button is-info is-pulled-right" href="#" onclick="addUser(); return false;">
 				Bestätigen
 			</a>
