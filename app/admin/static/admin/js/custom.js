@@ -248,6 +248,34 @@ function addUser() {
     makeRequest(route, target, sendData)
 }
 
+function toggleActive(userid) {
+  function changeLink(target) {
+    if (req.readyState == 4) {
+      if (req.status == 200) {
+        document.getElementById(target).innerHTML = req.responseText
+      } else {
+        alert("error: editUserInRole()")
+      }
+    }
+  }
+  var target = "tgU_" + userid
+  var route = "/admin/users/deactivate/" + userid
+  req = new XMLHttpRequest()
+  if (window.XMLHttpRequest) {
+    req = new XMLHttpRequest()
+  } else if (window.ActiveXObject) {
+    req = new ActiveXObject("Microsoft.XMLHTTP")
+  }
+  if (req != undefined) {
+    req.onreadystatechange = function() {
+      changeLink(target)
+    }
+    req.open("GET", route, true)
+    req.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
+    req.send()
+  }
+}
+
 function deleteUser(id, name) {
     if (!confirm("Benutzer " + name + " löschen?")) {
         return

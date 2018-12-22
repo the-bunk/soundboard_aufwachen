@@ -55,6 +55,14 @@ def admin_remove_user(iduser):
     return "/admin"
 
 
+@mod_admin.route('/users/deactivate/<iduser>')
+def admin_deactivate_user(iduser):
+    user = user_datastore.get_user(iduser)
+    user_datastore.toggle_active(user)
+    user_datastore.commit()
+    return str(user.is_active)
+
+
 @mod_admin.route('/users/role/<rolename>')
 def admin_users_role(rolename):
     if not rolename:
