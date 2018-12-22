@@ -6,10 +6,17 @@
     <!-- MODAL -->
     <div id="modal" class="modal">
         <div class="modal-background" onclick="toggleModal(); return false;"></div>
-        <div id="modal_content" class="modal-content">
-        {{ render_soundspende() }}
+            <div id="modal_content" class="modal-content">
+                <div class="modal-card">
+                    <section class="modal-card-body has-text-centered">
+                        <span class="icon">
+                            <i class="fas fa-spinner fa-pulse"></i>
+                        </span>
+                    </section>
+                </div>
+            </div>
+            <button class="modal-close is-large" aria-label="close" onclick="toggleModal(); return false;"></button>
         </div>
-        <button class="modal-close is-large" aria-label="close" onclick="toggleModal(); return false;"></button>
     </div>
 
     <!-- MENU -->

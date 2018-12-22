@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, request, current_app, flash
 from werkzeug.utils import secure_filename
 from app import db
 from app.core import remove_html
-from app.models import Board, Sound
+from app.models import Board, Sound, Tag
 
 mod_site = Blueprint('site', __name__, template_folder='templates', static_folder='static/site')
 
@@ -149,15 +149,42 @@ def search():
     return render_template('site/search_sound.html', sounds=sounds, boards=boards)
 
 
+@mod_site.route('/soundspende', methods=["GET"])
+def soundspende():
+    tags = Tag.query.all()
+    return render_template('site/includes/_modal_soundspende.html', tags=tags)
+
+
 @mod_site.route('/soundspende/submit', methods=["POST"])
 def soundspende_submit():
     name = remove_html(request.form['name'])
     description = remove_html(request.form['description'])
     soundfile = request.files['soundfile']
-
+    tags_str = request.form['tags'].split(',')
+    tags_id = request.form['tags_id']
+    if not soundfile:
+        flash('Keine Datei übertragen.', 'danger')
+        return "2"
     if Sound.query.filter_by(name=name).first():
         flash('Dieser Name existiert bereits.', 'danger')
         return "1"
+
+    # tags sammeln
+    tags = []
+    for t in tags_str:
+        t = t.strip()
+        if t.replace(" ","") == "":
+            continue
+        tag = Tag.query.filter_by(tag=t).first()
+        if not tag:
+            tag = Tag(tag=t, tag_lower=t.lower())
+            db.session.add(tag)
+            db.session.commit()
+        tags.append(tag)
+    for t in tags_id:
+        tag = Tag.query.filter_by(id=t).first()
+        if tag:
+            tags.append(tag)
 
     # save file
     filename = secure_filename(soundfile.filename)
@@ -168,6 +195,10 @@ def soundspende_submit():
     # add to database
     new_sound = Sound(name=name, description=description, soundfile=db_filename)
     db.session.add(new_sound)
+    db.session.commit()
+    for t in tags:
+        new_sound.tags.append(t)
+
     db.session.commit()
 
     flash('Soundfile übertragen, dankeschön.', 'success')

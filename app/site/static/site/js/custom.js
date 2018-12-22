@@ -1,3 +1,69 @@
+function getRequest() {
+    req = new XMLHttpRequest()
+    if (window.XMLHttpRequest) {
+        req = new XMLHttpRequest()
+    } else if (window.ActiveXObject) {
+        req = new ActiveXObject("Microsoft.XMLHTTP")
+    }
+    return req
+}
+
+function loadDiv(target) {
+    if (req.readyState == 4) {
+        if (req.status == 200) {
+            if (target == "redirect") {
+                window.location.href = req.responseText
+            } else if (target != "null") {
+                document.getElementById(target).innerHTML = req.responseText
+            }
+        }
+    }
+}
+
+function makeRequest(route, target, sendData) {
+    var req = getRequest()
+    if (req != undefined) {
+        req.onreadystatechange = function() {
+            loadDiv(target)
+        }
+        if (sendData == null) {
+            req.open("GET", route, true)
+        } else {
+            req.open("POST", route, true)
+        }
+        req.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
+        req.send(sendData)
+        return
+    }
+}
+
+function getEnabledButtons(container) {
+    var sound_list = []
+    var x = document.getElementById(container)
+    var y = x.getElementsByTagName("a")
+    for (let item of y) {
+        if (item.classList.contains("is-success")) {
+            sound_list.push(item.getAttribute("data-id"))
+        }
+    }
+    return sound_list
+}
+
+function toggleButton(id, prefix) {
+    var e = document.getElementById(prefix + id)
+    if (e.classList.contains("is-danger")) {
+        e.classList.remove("is-danger")
+        e.classList.add("is-success")
+    } else {
+        e.classList.remove("is-success")
+        e.classList.add("is-danger")
+    }
+}
+
+
+
+
+
 function toggleModal() {
     var e = document.getElementById("modal")
     if (e.classList.contains("is-active")) {
@@ -48,26 +114,32 @@ function playAudio(audio_id) {
     clickedSound(audio_id)
 }
 
+
+function modalSoundspende() {
+    var route = "/soundspende"
+    var target = "modal_content"
+    makeRequest(route, target, null)
+    toggleModal()
+}
+
 function submitSoundspende() {
     document.getElementById("bt_submit").className =
         "button is-pulled-right is-info is-loading"
     var name = document.getElementById("tb_name").value
     var description = document.getElementById("tb_description").value
     var soundfile = document.getElementById("soundfile")
-    // if (!isStr(name)) {
-    //     alert("error: name");
-    //     return;
-    // }
-    // if (!isStr(description)) {
-    //     alert("error: description");
-    //     return;
-    // }
+    var tags = document.getElementById("tb_tags").value
+    var tags_id = getEnabledButtons("tags")
+
     var formData = new FormData()
     formData.append("name", name)
     formData.append("description", description)
     formData.append("soundfile", soundfile.files[0])
+    formData.append("tags", tags)
+    formData.append("tags_id", tags_id)
+
     var route = "/soundspende/submit"
-    var target = "main_content"
+    var target = "redirect"
     // KRÜCKE
     var request = new XMLHttpRequest()
     request.open("POST", route)
