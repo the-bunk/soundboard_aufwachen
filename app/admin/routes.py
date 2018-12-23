@@ -64,16 +64,21 @@ def admin_sounds():
 ### SOUNDS
 @mod_admin.route('/sound/submit', methods=["POST"])
 def sound_submit():
-    name = remove_html(request.form['name'])
-    description = remove_html(request.form['description'])
-    if 'soundfile' in request.files.to_dict():
-        soundfile = request.files['soundfile']
-    else:
-        soundfile = None
-    boards = request.form['boards']
-    sound_id = request.form['sound_id']
-    tags_str = request.form['tags'].split(',')
-    tags_id = request.form['tags_id']
+    try:
+        name = remove_html(request.form['name'])
+        description = remove_html(request.form['description'])
+        if 'soundfile' in request.files.to_dict():
+            soundfile = request.files['soundfile']
+        else:
+            soundfile = None
+        boards = request.form['boards']
+        sound_id = int(request.form['sound_id'])
+        tags_str = request.form['tags'].split(',')
+        tags_id = request.form['tags_id']
+    except:
+        flash('Fehlerhafte Daten.', 'danger')
+        return "3"
+
     # tags sammeln
     tags = []
     for t in tags_str:
@@ -99,7 +104,6 @@ def sound_submit():
         sound = Sound.query.filter_by(name=name).first()
         if sound:
             flash('Dieser Name existiert bereits.', 'danger')
-            print("NAMEEE")
             return "0"
         # save file
         filename = secure_filename(soundfile.filename)

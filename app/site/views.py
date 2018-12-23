@@ -60,7 +60,7 @@ def init_my_blueprint():
                 ["nee ich kann nicht meckern", "", ""],
                 ["terrorziege", "", ""],
                 ["springend klingt die Muenze", "", ""],
-                ["wer die Lippen Spitzt", "", "lindner_pfeift.ogg"],
+                ["wer den Mund spitzt", "", "lindner_pfeift.ogg"],
                 ["Die Verantwortung der Autohersteller", "", "verantwortung_der_autohersteller.ogg"],
                 ["radikal krass cool", "", ""],
                 ["Geburtstagswünsche von Seehofer", "", "seehofer_geburtstag.ogg"],
@@ -128,6 +128,13 @@ def home():
     return render_template('site/index.html', board=board, boards=boards)
 
 
+@mod_site.route('/beste')
+def charts():
+    boards = Board.query.all()
+    sounds = Sound.query.filter(Sound.enabled == True, Sound.hidden == False, Sound.count > 10).order_by(Sound.count.desc()).limit(24)
+    return render_template('site/charts.html', boards=boards, sounds=sounds, selected="charts")
+
+
 @mod_site.route('/spezial')
 def spezial():
     boards = Board.query.all()
@@ -146,7 +153,7 @@ def board(board):
 def search():
     boards = Board.query.all()
     sounds = Sound.query.filter_by(enabled=True).all()
-    return render_template('site/search_sound.html', sounds=sounds, boards=boards)
+    return render_template('site/search_sound.html', sounds=sounds, boards=boards, selected="search")
 
 
 @mod_site.route('/soundspende', methods=["GET"])
@@ -157,11 +164,16 @@ def soundspende():
 
 @mod_site.route('/soundspende/submit', methods=["POST"])
 def soundspende_submit():
-    name = remove_html(request.form['name'])
-    description = remove_html(request.form['description'])
-    soundfile = request.files['soundfile']
-    tags_str = request.form['tags'].split(',')
-    tags_id = request.form['tags_id']
+    try:
+        name = remove_html(request.form['name'])
+        description = remove_html(request.form['description'])
+        soundfile = request.files['soundfile']
+        tags_str = request.form['tags'].split(',')
+        tags_id = request.form['tags_id']
+    except:
+        flash('Fehlerhafte Daten.', 'danger')
+        return "3"
+
     if not soundfile:
         flash('Keine Datei übertragen.', 'danger')
         return "2"
