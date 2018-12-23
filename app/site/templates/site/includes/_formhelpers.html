@@ -37,9 +37,12 @@
 
 {% macro render_search_field(js_func) %}
 <div class="field">
-    <div id="div_search" class="control ">
+    <p id="div_search" class="control has-icons-left">
         <input id="tb_search" class="input"  onkeyup="{{js_func}}; return false;" type="text" placeholder="Suche">
-    </div>
+        <span class="icon is-small is-left">
+          <i class="fas fa-search"></i>
+        </span>
+    </p>
 </div>
 {% endmacro %}
 
