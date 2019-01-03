@@ -1,0 +1,21 @@
+{% from 'site/includes/formhelpers.html' import render_soundcard, include_soundfile %}
+{% extends 'site/base.html' %}
+
+{% block main_content %}
+
+<!-- MESSAGES-->
+{% include 'site/includes/_messages.html' %}
+
+<!-- SOUNDCARDS -->
+<div class="container content-wrapper">
+<div class="columns is-multiline">
+    {% for s in sounds %}
+    {% if s.enabled and not s.hidden %}
+            {{ include_soundfile(s) }}
+            {{ render_soundcard(s) }}
+    {% endif %}
+    {% endfor %}
+</div>
+</div>
+
+{% endblock %}

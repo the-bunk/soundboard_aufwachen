@@ -13,6 +13,8 @@ function loadDiv(target) {
         if (req.status == 200) {
             if (target == "redirect") {
                 window.location.href = req.responseText
+            } else if (target == "reload") {
+				document.open('text/html');document.write(req.responseText);document.close();
             } else if (target != "null") {
                 document.getElementById(target).innerHTML = req.responseText
             }
@@ -120,6 +122,43 @@ function modalSoundspende() {
     toggleModal()
 }
 
+function modalBoards() {
+    var route = "/modal/boards"
+    var target = "modal_content"
+    makeRequest(route, target, null)
+    toggleModal()
+}
+
+function submitUserboard() {
+    var name = document.getElementById("tb_name").value
+    var sounds = getEnabledButtons("sounds_to_board")
+    var target = "reload"
+    var route = "/userboard/submit"
+    var sendData = JSON.stringify({
+        name: name,
+        sounds: sounds,
+    })
+    makeRequest(route, target, sendData)
+}
+
+function deleteUserboard(board_id) {
+    if (userConfirmation("Board löschen?")) {
+        var target = "redirect"
+        var route = "/userboard/delete/" + board_id
+
+        var req = getRequest()
+        if (req != undefined) {
+            req.onreadystatechange = function() {
+                loadDiv(target)
+            }
+            req.open("GET", route, true)
+            req.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
+            req.send()
+            return
+        }
+    }
+}
+
 function submitSoundspende() {
     document.getElementById("bt_submit").className =
         "button is-pulled-right is-info is-loading"
@@ -167,6 +206,11 @@ function display_sounds() {
     for (var j = 0, divsLen = nameDivs.length; j < divsLen; j++) {
         nameDivs[j].style.display = "block"
     }
+}
+
+function userConfirmation(text) {
+    var r = confirm(text)
+    return r
 }
 
 function filter_sounds() {

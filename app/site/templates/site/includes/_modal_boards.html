@@ -1,0 +1,50 @@
+{% from 'admin/includes/formhelpers.html' import render_soundcard, include_soundfile, render_create_edit_board %}
+<div class="modal-card">
+    <section class="modal-card-body">
+    <!-- ADD BOARD -->
+
+    <div class="control section">
+    <p class="title">Board hinzufügen</p>
+    <div class="field">
+        <label class="label">Name</label>
+        <div class="control">
+            <input id="tb_name" class="input" type="text" value="{% if board %}{{board.name}}{% endif %}">
+        </div>
+    </div>
+    <div id="sounds_to_board" class="field">
+        {% for s in sounds %}
+        <a id="sound_{{ s.id}}" data-id="{{ s.id}}" class="button spaced {% if board and s in board.sounds %}is-success{% else %}is-danger{% endif %}" href="#" onclick="toggleButton('{{ s.id }}', 'sound_'); return false;">{{ s.name }}</a> {% endfor %}
+    </div>
+    <br/>
+    <a id="bt_submit" class="button is-info is-pulled-right" href="#" onclick="submitUserboard(); return false;">
+        Bestätigen
+    </a>
+    </div>
+
+<!-- BOARDS LISTE-->
+	<div id="scroll2boards" class="section is-vertical table">
+		<p class="title">Boards verwalten</p>
+		<table id="table_boards" class="table is-fullwidth">
+			<thead>
+				<tr>
+					<th><a id="bt_bname" href=# onclick="sortTable('table_boards', 0, 'bt_bname', true); return false;">Name</a></th>
+					<th><a id="bt_bid" href=# onclick="sortTable('table_boards', 0, 'bt_bid', true); return false;">id</a></th>
+					<th>löschen</th>
+				</tr>
+			</thead>
+			<tbody>
+
+				{% if userboards %}
+				{% for b in userboards %}
+				<tr>
+					<td>{{ b.name }}</td>
+					<td>{{ b.id}}</td>
+					<td><a href="/userboard/delete/{{b.id}}" onclick="if(!userConfirmation('Board löschen?')){return false;};">löschen</a></td>
+				</tr>
+				{% endfor %}
+				{%endif %}
+			</tbody>
+		</table>
+	</div>
+    </section>
+</div>

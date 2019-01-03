@@ -39,20 +39,29 @@ class Sound(Base):
 
     def get_all():
         # if current_user.has_role("spezial") geht nicht
-        spezial = False
+        sounds = None
         for r in current_user.roles:
             if str(r.name) == "spezial":
-                spezial = True
+                sounds = Sound.query.all()
                 break
-        if spezial:
-            sounds = Sound.query.all()
-        else:
+        if sounds:
             sounds = Sound.query.filter_by(enabled=True).all()
         return sounds
 
     def get_charts():
         sounds = Sound.query.filter(Sound.enabled == True, Sound.hidden == False, Sound.count > 10).order_by(Sound.count.desc()).limit(24)
         return sounds
+
+    def get_sound(index):
+        sound = None
+        for r in current_user.roles:
+            if str(r.name) == "spezial":
+                sound = Sound.query.filter_by(id==index).first()
+                break
+        if sound:
+            sound = Sound.query.filter(enabled==True & id==index).first()
+        return sound
+
 
 
 class Board(Base):

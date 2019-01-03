@@ -1,3 +1,44 @@
-{% from 'site/includes/formhelpers.html' import render_menu, render_soundspende %}
-{{ render_soundspende(tags) }}
+<div class="modal-card">
+    <section class="modal-card-body">
+    <p class="title">Sound hinzufügen</p>
+    <!-- NAME -->
+    <div class="field">
+        <label class="label">Name</label>
+        <div class="control">
+            <input id="tb_name" class="input" type="text" placeholder="z.B. nix ist für free"">
+        </div>
+    </div>
+    <!-- BESCHREIBUNG -->
+    <div class="field">
+        <label class="label">Beschreibung</label>
+        <div class="control">
+            <input id="tb_description" class="input" type="test" placeholder="z.B. Österreicher weiss bescheid"">
+        </div>
+    </div>
+    <!-- SOUNDDATEI -->
+    <div class="field">
+        <label class="label">Sounddatei (<1MB, ogg)</label>
+        <div class="file has-name is-boxed">
+            <input type="file" class="inputfile inputfile-2" id="soundfile">
+            <label for="file"></label>
+        </div>
+    </div>
+    <!-- TAGS -->
+    <div class="field">
+        <label class="label">Tags</label>
+        <div class="control">
+            <input id="tb_tags" class="input" type="test" placeholder="Jingle, Hans Jessen, Verstand">
+        </div>
+        <div id="tags" class="control">
+        {% for t in tags %}
+            <a id="tag_{{t.id}}" data-id="{{ t.id}}" class="button spaced is-danger" href="#" onclick="toggleButton('{{ t.id }}', 'tag_'); return false;">{{ t.tag }}</a>
+        {% endfor %}
+        </div>
+    </div>
+    <br/>
+    <a id="bt_submit" class="button is-info is-pulled-right" href="#" onclick="submitSoundspende(); return false;">
+        Bestätigen
+    </a>
 
+    </section>
+</div>

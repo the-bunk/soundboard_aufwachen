@@ -1,12 +1,30 @@
+import json
 import os
 import sys
-from flask import Blueprint, render_template, request, current_app, flash, make_response
+import uuid
+from flask import Blueprint, render_template, request, current_app, flash, make_response, redirect
 from werkzeug.utils import secure_filename
 from app import db
 from app.core import remove_html
 from app.models import Board, Sound, Tag
 
 mod_site = Blueprint('site', __name__, template_folder='templates', static_folder='static/site')
+
+
+
+
+
+def get_userboards():
+    userboards = []
+    for c in request.cookies.items():
+        if "board" in c[0]:
+            cdata = json.loads(c[1])
+            userboards.append(cdata)
+    return userboards
+
+
+
+
 
 
 @mod_site.before_app_first_request
@@ -123,52 +141,80 @@ def init_my_blueprint():
 
 @mod_site.route('/')
 def home():
-
+    userboards = get_userboards()
     boards = Board.query.all()
     sounds = Sound.get_charts()
        
-    ret = make_response(render_template('site/charts.html', boards=boards, sounds=sounds, selected="charts"))
-    ret.set_cookie('userID', '{ "test": 1, "test3": 7}')
+    ret = make_response(render_template('site/charts.html', boards=boards, userboards=userboards, sounds=sounds, selected="charts"))
+    userboard_id = str(uuid.uuid4())
+    userboard = { "name": "mein Board", "id": userboard_id, "sounds": [1, 2, 3, 6, 66, 23]}
+    print(userboard)
+    ret.set_cookie('board{}'.format(userboard_id), json.dumps(userboard))
 
-    return ret
+    # return ret
+    return render_template('site/charts.html', boards=boards, userboards=userboards, sounds=sounds, selected="charts")
 
 
 @mod_site.route('/datenschutz')
 def datenschutz():
     # lade cookies
+    userboards = []
     name = request.cookies.get('userID')
-    for c in request.cookies.items():
-        print(c)
+    cookies = request.cookies.items()
+    for c in cookies:
+        if "board" in c[0]:
+            cdata = json.loads(c[1])
+            print("Board: {}, Sounds: {}".format(cdata['name'], cdata['sounds']))
+            userboards.append(cdata)
 
     return render_template('site/datenschutz.html', cookies=cookies)
 
 
 @mod_site.route('/beste')
 def charts():
+    userboards = get_userboards()
     boards = Board.query.all()
     sounds = Sound.get_all()
-    return render_template('site/charts.html', boards=boards, sounds=sounds, selected="charts")
+    return render_template('site/charts.html', boards=boards, userboards=userboards, sounds=sounds, selected="charts")
 
 
 @mod_site.route('/spezial')
 def spezial():
+    userboards = get_userboards()
     boards = Board.query.all()
     board = Board.query.filter_by(name="spezial").first()
-    return render_template('site/spezial.html', board=board, boards=boards)
+    return render_template('site/spezial.html', board=board, userboards=userboards, boards=boards)
 
 
 @mod_site.route('/board/<board>')
 def board(board):
+    userboards = get_userboards()
     boards = Board.query.all()
     board = Board.query.filter_by(id=board).first()
-    return render_template('site/index.html', board=board, boards=boards)
+    return render_template('site/index.html', board=board, userboards=userboards, boards=boards)
+
+
+@mod_site.route('/userboard/<userboard>')
+def userboard(userboard):
+    userboards = get_userboards()
+    for c in request.cookies.items():
+        print(c[0])
+        if c[0] == userboard:
+            cdata = json.loads(c[1])
+            selected = cdata['id']
+            sounds = Sound.query.filter(Sound.id.in_(cdata['sounds'])).all()
+            break
+    
+    boards = Board.query.all()
+    return render_template('site/userboard.html', sounds=sounds, boards=boards, userboards=userboards, selected=selected)
 
 
 @mod_site.route('/search')
 def search():
+    userboards = get_userboards()
     boards = Board.query.all()
     sounds = Sound.get_all()
-    return render_template('site/search_sound.html', sounds=sounds, boards=boards, selected="search")
+    return render_template('site/search_sound.html', sounds=sounds, boards=boards, userboards=userboards, selected="search")
 
 
 @mod_site.route('/modal/soundspende', methods=["GET"])
@@ -177,10 +223,46 @@ def soundspende():
     return render_template('site/includes/_modal_soundspende.html', tags=tags)
 
 
-@mod_site.route('/modal/create_board', methods=["GET"])
-def create_board():
+@mod_site.route('/modal/boards', methods=["GET"])
+def boards():
+    userboards = get_userboards()
     sounds = Sound.get_all()
-    return render_template('site/includes/_modal_create_board.html', sounds=sounds)
+    return render_template('site/includes/_modal_boards.html', sounds=sounds, userboards=userboards)
+
+
+@mod_site.route('/userboard/submit', methods=["POST"])
+def userboard_submit():
+    data = request.get_json()
+    name = data["name"]
+    sounds = data["sounds"]
+
+    # check if sounds are valid 
+    print("sounds: {}".format(sounds))
+
+    # neues board erstellen
+    if not name:
+        flash('Kein Name.', 'danger')
+
+    flash('Board erstellt.', 'success')
+
+    
+    
+    userboard_id = str(uuid.uuid4())
+    userboard = { "name": str(name), "id": userboard_id, "sounds": sounds}
+    ret = make_response(redirect("/"))
+    ret.set_cookie('board{}'.format(userboard_id), json.dumps(userboard))
+    return ret
+
+
+@mod_site.route('/userboard/delete/<board_id>')
+def userboard_delete(board_id):
+    flash('Board gelöscht.', 'success')
+
+    # ret = make_response(render_template('site/charts.html', boards=boards, userboards=userboards, sounds=sounds, selected="charts"))
+    ret = make_response(redirect("/"))
+    ret.set_cookie('board{}'.format(board_id), '', expires=0)
+    print("RETTT")
+    return ret
 
 
 @mod_site.route('/soundspende/submit', methods=["POST"])
@@ -236,6 +318,35 @@ def soundspende_submit():
 
     flash('Soundfile übertragen, dankeschön.', 'success')
     return "0"
+
+
+@mod_site.route('/board/submit', methods=["POST"])
+def board_submit():
+    data = request.get_json()
+    name = data["name"]
+    sounds = data["sounds"]
+
+    # neues board erstellen
+    if not name:
+        flash('Kein Name.', 'danger')
+        return "/admin/boards"
+
+    # gibt es schon ein board mit diesem namen?
+    # TODO
+    if board:
+        flash('Dieser Name existiert bereits.', 'danger')
+        return "/admin/boards"
+
+    # cookie für board erstellen
+    # TODO
+    # name
+    # sounds
+    for s in sounds:
+        pass
+
+    flash('Board erstellt.', 'success')
+
+    return "/"
 
 
 @mod_site.route('/clicked/<audio_id>', methods=["GET"])
