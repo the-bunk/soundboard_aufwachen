@@ -2,10 +2,8 @@
 <div class="container content-wrapper">
 <div class="columns is-multiline">
     {% for s in sounds %}
-    {% if s.enabled and not s.hidden %}
         {{ include_soundfile(s) }}
         {{ render_soundcard(s) }}
-    {% endif %}
     {% endfor %}
 </div>
 </div>

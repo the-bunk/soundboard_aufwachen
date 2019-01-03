@@ -61,9 +61,6 @@ function toggleButton(id, prefix) {
 }
 
 
-
-
-
 function toggleModal() {
     var e = document.getElementById("modal")
     if (e.classList.contains("is-active")) {
@@ -72,6 +69,7 @@ function toggleModal() {
         e.classList.add("is-active")
     }
 }
+
 
 function clickedSound(audio_id) {
     var route = "/clicked/" + audio_id
@@ -116,7 +114,7 @@ function playAudio(audio_id) {
 
 
 function modalSoundspende() {
-    var route = "/soundspende"
+    var route = "/modal/soundspende"
     var target = "modal_content"
     makeRequest(route, target, null)
     toggleModal()

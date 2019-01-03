@@ -1,6 +1,6 @@
 import os
 import sys
-from flask import Blueprint, render_template, request, current_app, flash
+from flask import Blueprint, render_template, request, current_app, flash, make_response
 from werkzeug.utils import secure_filename
 from app import db
 from app.core import remove_html
@@ -123,15 +123,30 @@ def init_my_blueprint():
 
 @mod_site.route('/')
 def home():
+
     boards = Board.query.all()
-    board = Board.query.filter_by(name="beste").first()
-    return render_template('site/index.html', board=board, boards=boards)
+    sounds = Sound.get_charts()
+       
+    ret = make_response(render_template('site/charts.html', boards=boards, sounds=sounds, selected="charts"))
+    ret.set_cookie('userID', '{ "test": 1, "test3": 7}')
+
+    return ret
+
+
+@mod_site.route('/datenschutz')
+def datenschutz():
+    # lade cookies
+    name = request.cookies.get('userID')
+    for c in request.cookies.items():
+        print(c)
+
+    return render_template('site/datenschutz.html', cookies=cookies)
 
 
 @mod_site.route('/beste')
 def charts():
     boards = Board.query.all()
-    sounds = Sound.query.filter(Sound.enabled == True, Sound.hidden == False, Sound.count > 10).order_by(Sound.count.desc()).limit(24)
+    sounds = Sound.get_all()
     return render_template('site/charts.html', boards=boards, sounds=sounds, selected="charts")
 
 
@@ -152,14 +167,20 @@ def board(board):
 @mod_site.route('/search')
 def search():
     boards = Board.query.all()
-    sounds = Sound.query.filter_by(enabled=True).all()
+    sounds = Sound.get_all()
     return render_template('site/search_sound.html', sounds=sounds, boards=boards, selected="search")
 
 
-@mod_site.route('/soundspende', methods=["GET"])
+@mod_site.route('/modal/soundspende', methods=["GET"])
 def soundspende():
     tags = Tag.query.all()
     return render_template('site/includes/_modal_soundspende.html', tags=tags)
+
+
+@mod_site.route('/modal/create_board', methods=["GET"])
+def create_board():
+    sounds = Sound.get_all()
+    return render_template('site/includes/_modal_create_board.html', sounds=sounds)
 
 
 @mod_site.route('/soundspende/submit', methods=["POST"])

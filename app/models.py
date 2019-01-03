@@ -1,3 +1,4 @@
+from flask_security import current_user
 from sqlalchemy import Table, Column, Integer, ForeignKey, String, BigInteger, Boolean
 from sqlalchemy.orm import relationship
 
@@ -35,6 +36,23 @@ class Sound(Base):
         "Tag",
         secondary=sounds_tags,
         back_populates="sounds")
+
+    def get_all():
+        # if current_user.has_role("spezial") geht nicht
+        spezial = False
+        for r in current_user.roles:
+            if str(r.name) == "spezial":
+                spezial = True
+                break
+        if spezial:
+            sounds = Sound.query.all()
+        else:
+            sounds = Sound.query.filter_by(enabled=True).all()
+        return sounds
+
+    def get_charts():
+        sounds = Sound.query.filter(Sound.enabled == True, Sound.hidden == False, Sound.count > 10).order_by(Sound.count.desc()).limit(24)
+        return sounds
 
 
 class Board(Base):
