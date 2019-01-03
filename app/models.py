@@ -44,7 +44,7 @@ class Sound(Base):
             if str(r.name) == "spezial":
                 sounds = Sound.query.all()
                 break
-        if sounds:
+        if not sounds:
             sounds = Sound.query.filter_by(enabled=True).all()
         return sounds
 
@@ -58,7 +58,7 @@ class Sound(Base):
             if str(r.name) == "spezial":
                 sound = Sound.query.filter_by(id==index).first()
                 break
-        if sound:
+        if not sound:
             sound = Sound.query.filter(enabled==True & id==index).first()
         return sound
 
