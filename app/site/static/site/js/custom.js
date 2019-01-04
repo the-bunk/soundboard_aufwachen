@@ -111,7 +111,6 @@ function toggleModal() {
 function clickedSound(audio_id) {
 	var clickCount = getCookie("ClickCount")
 	if (!(clickCount == 'false')) {
-		alert(clickCount)
 		var route = "/clicked/" + audio_id
 		req = new XMLHttpRequest()
 		req.open("GET", route, true)
