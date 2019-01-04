@@ -2,27 +2,22 @@
 {% extends 'admin/head.html' %}
 {% block body %}
 
-<body>
-    <!-- MENU -->
-    {{ render_admin_menu(selected) }}
+<!-- MENU -->
+{{ render_admin_menu(selected) }}
 
-    <!-- SOUNDCARDS -->
-    <div id="main_content">
-        {% block main_content %} {% endblock %}
-    </div>
+<div id="main_content">
+    {% block main_content %} {% endblock %}
+</div>
 
-    <div class="hspace"></div>
+<div class="hspace"></div>
 
-    <!-- FOOTER -->
-    <footer class="footer">
-        <div class="container">
-            <div class="content has-text-centered">
-                <p><strong>{{config.TITLE}}</strong> by <a href="mailto:the_bunk@gmx.de">bunk</a></p>
-            </div>
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="container">
+        <div class="content has-text-centered">
+            <p><strong>{{config.TITLE}}</strong> by <a href="mailto:the_bunk@gmx.de">bunk</a></p>
         </div>
-    </footer>
+    </div>
+</footer>
 
-</body>
-
-</html>
 {% endblock %}

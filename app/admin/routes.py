@@ -32,18 +32,20 @@ def init_my_blueprint():
 
     print('admin done')
 
+
 @mod_admin.before_request
 @login_required
 @roles_accepted('admin')
 def mod_admin_before_request():
-    pass
+    pass  # atm only used for context processors
+
 
 @mod_admin.route('/')
 @mod_admin.route('/users')
 def admin():
     roles = Role.query.all()
     users = User.query.all()
-    return render_template('admin/admin.html', users=users, roles=roles, selected='users')
+    return render_template('admin/users.html', users=users, roles=roles, selected='users')
 
 
 @mod_admin.route('/boards')
@@ -218,12 +220,12 @@ def board_submit():
         # neues board erstellen
         if not name:
             flash('Kein Name.', 'danger')
-            return redirect("/admin/boards")
+            return "/admin/boards"
 
         board = Board.query.filter_by(name=name).first()
         if board:
             flash('Dieser Name existiert bereits.', 'danger')
-            return redirect("/admin/boards")
+            return "/admin/boards"
 
         # add to database
         new_board = Board(name=name)

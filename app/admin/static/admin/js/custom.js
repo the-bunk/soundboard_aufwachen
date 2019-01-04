@@ -37,6 +37,30 @@ function makeRequest(route, target, sendData) {
     }
 }
 
+function getEnabledButtons(container) {
+    var sound_list = []
+    var x = document.getElementById(container)
+    var y = x.getElementsByTagName("a")
+    for (let item of y) {
+        if (item.classList.contains("is-success")) {
+            sound_list.push(item.getAttribute("data-id"))
+        }
+    }
+    return sound_list
+}
+
+function toggleButton(id, prefix) {
+    var e = document.getElementById(prefix + id)
+    if (e.classList.contains("is-danger")) {
+        e.classList.remove("is-danger")
+        e.classList.add("is-success")
+    } else {
+        e.classList.remove("is-success")
+        e.classList.add("is-danger")
+    }
+}
+
+
 // SORT TABLE - aus dem internet
 function sortTable(tablename, col, button, desc) {
     desc = typeof desc !== "undefined" ? desc : false
@@ -115,28 +139,6 @@ function userConfirmation(text) {
     return r
 }
 
-function getEnabledButtons(container) {
-    var sound_list = []
-    var x = document.getElementById(container)
-    var y = x.getElementsByTagName("a")
-    for (let item of y) {
-        if (item.classList.contains("is-success")) {
-            sound_list.push(item.getAttribute("data-id"))
-        }
-    }
-    return sound_list
-}
-
-function toggleButton(id, prefix) {
-    var e = document.getElementById(prefix + id)
-    if (e.classList.contains("is-danger")) {
-        e.classList.remove("is-danger")
-        e.classList.add("is-success")
-    } else {
-        e.classList.remove("is-success")
-        e.classList.add("is-danger")
-    }
-}
 
 function submitBoard(board_id) {
     var name = document.getElementById("tb_name").value
@@ -234,6 +236,7 @@ function deleteBoard(board_id) {
     }
 }
 
+// USERS AND ROLES
 function addUser() {
     var email = document.getElementById("admin_add_user_email").value
     var password = document.getElementById("admin_add_user_password").value
@@ -246,7 +249,17 @@ function addUser() {
     makeRequest(route, target, sendData)
 }
 
-function toggleActive(userid) {
+function deleteUser(id, name) {
+    if (!confirm("Benutzer " + name + " löschen?")) {
+        return
+    }
+    var route = "/admin/users/remove_user/" + id
+    var target = "redirect"
+    document.cookie = "scroll-to=scroll2user; path=/;"
+    makeRequest(route, target, null)
+}
+
+function toggleUserActive(userid) {
   function changeLink(target) {
     if (req.readyState == 4) {
       if (req.status == 200) {
@@ -272,16 +285,6 @@ function toggleActive(userid) {
     req.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
     req.send()
   }
-}
-
-function deleteUser(id, name) {
-    if (!confirm("Benutzer " + name + " löschen?")) {
-        return
-    }
-    var route = "/admin/users/remove_user/" + id
-    var target = "redirect"
-    document.cookie = "scroll-to=scroll2user; path=/;"
-    makeRequest(route, target, null)
 }
 
 function addRole() {
@@ -365,3 +368,4 @@ function editUserInRole(set, user, role) {
   }
 
 }
+
