@@ -49,7 +49,7 @@ class Sound(Base):
         return sounds
 
     def get_charts():
-        sounds = Sound.query.filter(Sound.enabled == True, Sound.hidden == False, Sound.count > 0).order_by(Sound.count.desc()).limit(24)
+        sounds = Sound.query.filter(Sound.enabled == True, Sound.hidden == False, Sound.count > 10).order_by(Sound.count.desc()).limit(24)
         return sounds
 
     def get_sound(index):

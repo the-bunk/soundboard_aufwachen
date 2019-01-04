@@ -150,11 +150,12 @@ def mod_site_before_request():
 
 @mod_site.route('/')
 def home():
-    userboards = get_userboards()
-    boards = Board.query.all()
-    sounds = Sound.get_charts()
+    # userboards = get_userboards()
+    # boards = Board.query.all()
+    # sounds = Sound.get_charts()
        
-    return render_template('site/charts.html', boards=boards, userboards=userboards, sounds=sounds, selected="charts")
+    # return render_template('site/charts.html', boards=boards, userboards=userboards, sounds=sounds, selected="charts")
+    return redirect('/beste')
 
 
 @mod_site.route('/datenschutz')
@@ -188,7 +189,7 @@ def click_count_set(state):
 def charts():
     userboards = get_userboards()
     boards = Board.query.all()
-    sounds = Sound.get_all()
+    sounds = Sound.get_charts()
     return render_template('site/charts.html', boards=boards, userboards=userboards, sounds=sounds, selected="charts")
 
 
