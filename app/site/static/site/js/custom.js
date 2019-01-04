@@ -26,7 +26,7 @@ function getCookies() {
 
 function htmlListCookies(){
 	var c = getCookies()
-	var html = ""
+	var html = "<li>ein Session Cookie</li>"
 	for (i = 0; i < c.length; i++) {
 		html += "<li>" + c[i] + "</li>"
 	}
