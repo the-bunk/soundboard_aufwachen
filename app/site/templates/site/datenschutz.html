@@ -1,0 +1,58 @@
+{% extends 'site/head.html' %}
+{% block body %}
+
+<body>
+<!-- MESSAGES-->
+{% include 'site/includes/_messages.html' %}
+
+
+<div class="content">
+
+<div class="section">
+	<h1>Datenschutz</h1>
+<div class="section">
+	<h2>Logging</h2>
+	<p>Der Webhoster erstellt Logdateien, die Informationen wie die abgerufene Seite, die IP-Adresse des Abrufenden und die Uhrzeit enthalten.
+	Hier eine Beispiel</p>
+	<p><div class="box"><code>
+		42.42.42.42 - - [01/Feb/2019:01:23:45 +0000] "GET /favicon.ico HTTP/1.1" 404 233 "https://aufwachensoundboard.pythonanywhere.com/board/2" "Mozilla/6.0 (Linux; Android 9.0.1; Device) AppleWebKit/123 (KHTML, like Gecko) Chrome/42.123 Safari/123" "42.42.42.42" response-time=0.033<br>
+		42.42.42.42 - - [01/Feb/2019:01:23:45 +0000] "GET /clicked/1 HTTP/1.1" 200 1 "https://aufwachensoundboard.pythonanywhere.com/board/1" "Mozilla/5.0 (X11; Linux x86_64; rv:64.0) Gecko/20100100 Firefox/64.0" "42.42.42.42" response-time=0.078<br>
+		42.42.42.42 - - [01/Feb/2019:01:23:45 +0000] "GET /clicked/2 HTTP/1.1" 200 1 "https://aufwachensoundboard.pythonanywhere.com/board/1" "Mozilla/5.0 (X11; Linux x86_64; rv:64.0) Gecko/20100100 Firefox/64.0" "42.42.42.42" response-time=0.062<br>
+	</code></div></p>
+<p>Meine Anfrage ob man das Logging ausschalten könne blieb bisher unbeantwortet.</p>
+</div>
+
+	<div class="section">
+	<h2>Click Count</h2>
+	<p>
+	Jedesmal, wenn du einen Sound abspielst, wird auf dem Server ein Zähler um eins erhöht, es werden keine weiteren Daten abgespeichert. Damit könne die beliebtesten Sounds ermittelt werden. So lange die Logdateien bestehen kann allerdings das Abspielen eines Sounds einer Uhrzeit und IP-Adresse zugeordnet werden.
+	</p>
+	<p>
+	{% if click_count == 'false' %}
+		Click count ist ausgeschaltet. <a href="#" onclick="clickCountSet('true'); return false;">Einschalten!</a>
+	{% else %}
+		Click count ist eingeschaltet. <a href="#" onclick="clickCountSet('false'); return false;">Ausschalten!</a>
+	{% endif %}
+	</p>
+</div>
+
+<div class="section">
+	<h2>Cookies</h2>
+	<p>
+	Diese Seite hat folgende Cookies in deinem Browser gespeichert
+	</p>
+  <ul id="list_cookies">
+	  <li>ein Session Cookie</li>
+	  <!-- COOKIE LISTE --> 
+  </ul>
+</div>
+</div>
+
+</div>
+</body>
+	<script>
+		htmlListCookies();
+	</script>
+
+</html>
+{% endblock %}

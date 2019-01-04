@@ -2,7 +2,7 @@ import json
 import os
 import sys
 import uuid
-from flask import Blueprint, render_template, request, current_app, flash, make_response, redirect
+from flask import Blueprint, render_template, request, current_app, flash, make_response, redirect, Markup
 from werkzeug.utils import secure_filename
 from app import db
 from app.core import remove_html
@@ -139,6 +139,15 @@ def init_my_blueprint():
     print("site done")
 
 
+@mod_site.before_request
+def mod_site_before_request():
+    # check Datenschutzcookie
+    datenschutz = request.cookies.get('Datenschutz')
+    if not datenschutz:
+        flash(Markup('Information zum <a href="/datenschutz">Datenschutz</a>. <a href="#" onclick="datenschutzAccepted(); return false;">nicht mehr anzeigen</a>'), 'info')
+
+
+
 @mod_site.route('/')
 def home():
     userboards = get_userboards()
@@ -150,17 +159,29 @@ def home():
 
 @mod_site.route('/datenschutz')
 def datenschutz():
-    # lade cookies
-    userboards = []
-    name = request.cookies.get('userID')
+    # lade cookies, das ganze besser mit js clientseitig
     cookies = request.cookies.items()
-    for c in cookies:
-        if "board" in c[0]:
-            cdata = json.loads(c[1])
-            print("Board: {}, Sounds: {}".format(cdata['name'], cdata['sounds']))
-            userboards.append(cdata)
+    click_count = request.cookies.get('ClickCount')
+    if click_count != 'false':
+        click_count = 'true'
+    # else:
+    #     click_count = 'false'
+    # click_count = 
+    return render_template('site/datenschutz.html', click_count=click_count)
 
-    return render_template('site/datenschutz.html', cookies=cookies)
+
+@mod_site.route('/datenschutz/accepted', methods=["GET"])
+def datenschutz_accepted():
+    ret = make_response(redirect("/"))
+    ret.set_cookie('Datenschutz', "false")
+    return ret
+
+
+@mod_site.route('/click_count/<state>', methods=["GET"])
+def click_count_set(state):
+    ret = make_response(redirect("/datenschutz"))
+    ret.set_cookie('ClickCount', state)
+    return ret
 
 
 @mod_site.route('/beste')
@@ -237,8 +258,6 @@ def userboard_submit():
 
     flash('Board erstellt.', 'success')
 
-    
-    
     userboard_id = str(uuid.uuid4())
     userboard = { "name": str(name), "id": userboard_id, "sounds": sounds}
     ret = make_response(redirect("/"))

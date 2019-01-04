@@ -1,3 +1,38 @@
+function getCookie(cname) {
+  var name = cname + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
+  for(var i = 0; i <ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+function getCookies() {
+	var cookies = [];
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
+  for(var i = 0; i <ca.length; i++) {
+	  cookies.push(ca[i]);
+}
+  return cookies;
+}
+
+function htmlListCookies(){
+	var c = getCookies()
+	var html = ""
+	for (i = 0; i < c.length; i++) {
+		html += "<li>" + c[i] + "</li>"
+	}
+	document.getElementById("list_cookies").innerHTML = html
+}
+
 function getRequest() {
     req = new XMLHttpRequest()
     if (window.XMLHttpRequest) {
@@ -74,10 +109,13 @@ function toggleModal() {
 
 
 function clickedSound(audio_id) {
-    var route = "/clicked/" + audio_id
-    req = new XMLHttpRequest()
-    req.open("GET", route, true)
-    req.send()
+	var clickCount = getCookie("ClickCount")
+	if (clickCount) {
+		var route = "/clicked/" + audio_id
+		req = new XMLHttpRequest()
+		req.open("GET", route, true)
+		req.send()
+	}
 }
 
 function pauseAudio(audio_id) {
@@ -238,4 +276,18 @@ function filter_sounds() {
         }
     }
     document.getElementById("div_search").classList.remove("is_loading")
+}
+
+function datenschutzAccepted(){
+    var target = "reload"
+    var route = "/datenschutz/accepted"
+    makeRequest(route, target, null)
+
+}
+
+function clickCountSet(state){
+    var target = "reload"
+    var route = "/click_count/"+state
+    makeRequest(route, target, null)
+
 }
