@@ -145,13 +145,6 @@ def home():
     boards = Board.query.all()
     sounds = Sound.get_charts()
        
-    ret = make_response(render_template('site/charts.html', boards=boards, userboards=userboards, sounds=sounds, selected="charts"))
-    userboard_id = str(uuid.uuid4())
-    userboard = { "name": "mein Board", "id": userboard_id, "sounds": [1, 2, 3, 6, 66, 23]}
-    print(userboard)
-    ret.set_cookie('board{}'.format(userboard_id), json.dumps(userboard))
-
-    # return ret
     return render_template('site/charts.html', boards=boards, userboards=userboards, sounds=sounds, selected="charts")
 
 
@@ -198,7 +191,6 @@ def board(board):
 def userboard(userboard):
     userboards = get_userboards()
     for c in request.cookies.items():
-        print(c[0])
         if c[0] == userboard:
             cdata = json.loads(c[1])
             selected = cdata['id']
@@ -261,7 +253,6 @@ def userboard_delete(board_id):
     # ret = make_response(render_template('site/charts.html', boards=boards, userboards=userboards, sounds=sounds, selected="charts"))
     ret = make_response(redirect("/"))
     ret.set_cookie('board{}'.format(board_id), '', expires=0)
-    print("RETTT")
     return ret
 
 
