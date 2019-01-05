@@ -3,6 +3,7 @@ import os
 import sys
 import uuid
 from flask import Blueprint, render_template, request, current_app, flash, make_response, redirect, Markup
+from flask_security import login_required, roles_accepted
 from werkzeug.utils import secure_filename
 from app import db
 from app.core import remove_html
@@ -147,7 +148,6 @@ def mod_site_before_request():
         flash(Markup('Information zum <a href="/datenschutz">Datenschutz</a>. <a href="#" onclick="datenschutzAccepted(); return false;">nicht mehr anzeigen</a>'), 'info')
 
 
-
 @mod_site.route('/')
 def home():
     # userboards = get_userboards()
@@ -194,6 +194,8 @@ def charts():
 
 
 @mod_site.route('/spezial')
+@login_required
+@roles_accepted('spezial')
 def spezial():
     userboards = get_userboards()
     boards = Board.query.all()
