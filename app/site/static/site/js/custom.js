@@ -286,8 +286,17 @@ function datenschutzAccepted(){
 }
 
 function clickCountSet(state){
-    var target = "reload"
-    var route = "/click_count/"+state
-    makeRequest(route, target, null)
+	var clickCookie = getCookie("ClickCount")
+	if (clickCookie == "false"){
+		document.cookie = "ClickCount=true"; 
+	}
+	else{
+		document.cookie = "ClickCount=false"; 
+	}
+    // var target = "reload"
+    // var route = "/click_count/"+state
+    // makeRequest(route, target, null)
+	// document.location.href = "/";
+	document.location.reload()
 
 }
