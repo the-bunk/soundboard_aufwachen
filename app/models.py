@@ -62,6 +62,16 @@ class Sound(Base):
             sound = Sound.query.filter(enabled==True & id==index).first()
         return sound
 
+    def get_sounds(sounds_list):
+        sounds = None
+        for r in current_user.roles:
+            if str(r.name) == "spezial":
+                sounds = Sound.query.filter(Sound.id.in_(sounds_list)).all()
+                break
+        if not sounds:
+            sounds = Sound.query.filter(Sound.id.in_(sounds_list), Sound.enabled == True).all()
+        return sounds
+
 
 
 class Board(Base):

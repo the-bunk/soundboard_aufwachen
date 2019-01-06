@@ -213,12 +213,13 @@ def board(board):
 
 @mod_site.route('/userboard/<userboard>')
 def userboard(userboard):
+    sound=None
     userboards = get_userboards()
     for c in request.cookies.items():
         if c[0] == userboard:
             cdata = json.loads(c[1])
             selected = cdata['id']
-            sounds = Sound.query.filter(Sound.id.in_(cdata['sounds'])).all()
+            sounds = Sound.get_sounds(cdata['sounds'])
             break
     
     boards = Board.query.all()
