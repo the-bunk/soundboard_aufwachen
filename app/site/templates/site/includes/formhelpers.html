@@ -88,5 +88,6 @@
 {% macro include_soundfile(sound) %}
 <audio id="{{sound.id}}">
     <source src="{{ url_for('static', filename=sound.soundfile)}}" type="audio/ogg">
+    <source src="{{ url_for('static', filename=sound.soundfile.replace(".ogg",".mp3"))}}" type="audio/mpeg">
     error
 </audio> {% endmacro %}
