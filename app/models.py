@@ -56,10 +56,10 @@ class Sound(Base):
         sound = None
         for r in current_user.roles:
             if str(r.name) == "spezial":
-                sound = Sound.query.filter_by(id==index).first()
+                sound = Sound.query.filter_by(id=index).first()
                 break
         if not sound:
-            sound = Sound.query.filter(enabled==True & id==index).first()
+            sound = Sound.query.filter(Sound.enabled==True, Sound.id==index).first()
         return sound
 
     def get_sounds(sounds_list):
