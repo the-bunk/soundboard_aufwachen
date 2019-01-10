@@ -1,0 +1,9 @@
+<figure>
+    <figcaption>Listen to the T-Rex:</figcaption>
+    <audio controls>
+    <source src="{{ url_for('static', filename=sound.soundfile)}}" type="audio/ogg">
+    <source src="{{ url_for('static', filename=sound.soundfile.replace(".ogg",".mp3"))}}" type="audio/mpeg">
+            Your browser does not support the
+            <code>audio</code> element.
+    </audio>
+</figure>

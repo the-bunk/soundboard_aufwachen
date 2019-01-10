@@ -234,6 +234,12 @@ def search():
     return render_template('site/search_sound.html', sounds=sounds, boards=boards, userboards=userboards, selected="search")
 
 
+@mod_site.route('/embed_sound/<soundid>')
+def search():
+    sound = Sound.get_sound(int(soundid))
+    return render_template('site/includes/embed_sound.html', sound=sound)
+
+
 @mod_site.route('/modal/soundspende', methods=["GET"])
 def soundspende():
     tags = Tag.query.all()
