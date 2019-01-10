@@ -235,7 +235,7 @@ def search():
 
 
 @mod_site.route('/embed_sound/<soundid>')
-def search():
+def embed_sound(soundid):
     sound = Sound.get_sound(int(soundid))
     return render_template('site/includes/embed_sound.html', sound=sound)
 
