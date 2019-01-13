@@ -2,7 +2,7 @@ import json
 import os
 import sys
 import uuid
-from flask import Blueprint, render_template, request, current_app, flash, make_response, redirect, Markup
+from flask import Blueprint, render_template, request, current_app, flash, make_response, redirect, Markup, session
 from flask_security import login_required, roles_accepted
 from werkzeug.utils import secure_filename
 from app import db
@@ -25,7 +25,7 @@ def get_userboards():
 
 
 
-
+datenschutz_flashed = False
 
 
 @mod_site.before_app_first_request
@@ -142,9 +142,10 @@ def init_my_blueprint():
 
 @mod_site.before_request
 def mod_site_before_request():
-    # check Datenschutzcookie
+    global datenschutz_flashed
     datenschutz = request.cookies.get('Datenschutz')
-    if not datenschutz:
+    if not datenschutz and not datenschutz_flashed:
+        datenschutz_flashed = True
         flash(Markup('Information zum <a href="/datenschutz">Datenschutz</a>. <a href="#" onclick="datenschutzAccepted(); return false;">nicht mehr anzeigen</a>'), 'info')
 
 
